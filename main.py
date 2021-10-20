@@ -6,11 +6,11 @@ from pico2d import *
 open_canvas()
 
 
-p = mario.Mario()
-s = sound.BGM()
-bg = map.BG()
-g = map.Ground()
-goomba = map.Monster()
+p = mario.Mario() #플레이어 캐릭터
+s = sound.BGM() #소리
+bg = map.BG() #배경
+g = map.Ground() #타일
+goomba = map.Monster() #몬스터
 
 while mario.MOVING:
     clear_canvas()
@@ -19,8 +19,8 @@ while mario.MOVING:
     mario.cmove()
     p.update()
     goomba.update()
-    p.draw()
     goomba.draw()
+    p.draw()
     update_canvas()
     delay(0.01)
 

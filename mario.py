@@ -57,7 +57,7 @@ def cmove():
 
 
 
-class Mario:
+class Mario: #
     def __init__(self):
         self.marioRR = load_image('resource/marioRunR.png')
         self.marioRL = load_image('resource/marioRunL.png')
@@ -102,7 +102,7 @@ class Mario:
 
         # 속도 점점빠르게
         if self.speedX < MAXSPEED:
-            self.speedX += 0.05
+            self.speedX += 0.04
         self.x += (dir * self.speedX)
 
         # 미끄러지는 효과 ... 일단시도

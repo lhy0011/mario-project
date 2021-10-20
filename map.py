@@ -20,7 +20,9 @@ class BG: # 배경 사진
 
 class BGG: # 그 외 배경
     def __init__(self):
-        self.bgg = load_image('resource/tile_set.png')
+        self.cloud = load_image('resource/tile_set.png')
+    def drawBGG(self):
+        pass
 
 class Ground: # 34x34
     def __init__(self):
@@ -55,13 +57,26 @@ class Monster: # 32x32
         self.frame = 0
         self.x = random.randint (100, 300)
         self.y = basicY
+        self.isTWL = False
+        self.isTWR = True
 
     def update(self):
         global frameE
         if frameE % 16 == 0:
             self.frame = (self.frame + 1) % 2
         frameE += 1
-        self.x -= 0.5
+        if self.x < 0:
+            self.isTWL = True
+            self.isTWR = False
+        if self.x > 800:
+            self.isTWR = True
+            self.isTWL = False
+        if self.isTWL == False:
+            self.x -= 0.5
+        elif self.isTWR == False:
+            self.x += 0.5
+
+
 
     def draw(self):
         global EMAXHEIGHT
