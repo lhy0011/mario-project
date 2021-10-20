@@ -10,7 +10,7 @@ p = mario.Mario()
 s = sound.BGM()
 bg = map.BG()
 g = map.Ground()
-
+goomba = map.Monster()
 
 while mario.MOVING:
     clear_canvas()
@@ -18,7 +18,9 @@ while mario.MOVING:
     g.drawGround()
     mario.cmove()
     p.update()
+    goomba.update()
     p.draw()
+    goomba.draw()
     update_canvas()
     delay(0.01)
 

@@ -3,7 +3,7 @@ import keyboard as k
 
 MOVING = True
 DIRECL = False
-MAXSPEED = 6
+MAXSPEED = 5
 MAXHEIGHT = 150 # 점프높이
 frameS = 0
 isJump = False
@@ -25,7 +25,7 @@ def cmove():
     if k.is_pressed('right'):
         DIRECL = False
         dir += 1
-        print('오른쪽')
+        #print('오른쪽')
         if k.is_pressed('left'):
             isBreakL = True
             DIRECL = True
@@ -36,7 +36,7 @@ def cmove():
     elif k.is_pressed('left'):
         DIRECL = True
         dir -= 1
-        print('왼쪽')
+        #print('왼쪽')
         if k.is_pressed('right'):
             isBreakR = True
             DIRECL = False
