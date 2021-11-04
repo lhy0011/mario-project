@@ -51,7 +51,7 @@ EMAXWIDTH = 1683
 ESIZE = 32
 frameE = 0
 
-class Monster: # 32x32
+class Mgoomba: # 32x32
     def __init__(self):
         self.Goomba = load_image('resource/enemies.png')
         self.frame = 0
@@ -76,7 +76,14 @@ class Monster: # 32x32
         elif self.isTWR == False:
             self.x += 0.5
 
+class M:
+    def __init__(self):
+        self.mAI = load_image('resource/enemies.png')
+        self.frame = 0
+        self.x
 
+    def update(self):
+        pass
 
     def draw(self):
         global EMAXHEIGHT

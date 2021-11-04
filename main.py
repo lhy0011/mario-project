@@ -10,7 +10,7 @@ p = mario.Mario() #플레이어 캐릭터
 s = sound.BGM() #소리
 bg = map.BG() #배경
 g = map.Ground() #타일
-goomba = map.Monster() #몬스터
+goomba = map.Mgoomba() #몬스터
 
 while mario.MOVING:
     clear_canvas()

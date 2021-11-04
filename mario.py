@@ -73,6 +73,12 @@ class Mario: #
         self.x = 400
         self.y = basicY
 
+    def getX(self):
+        return self.x
+
+    def getY(self):
+        return self.y
+
     def update(self):
         global MAXSPEED
         global frameS
