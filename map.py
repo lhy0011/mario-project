@@ -1,5 +1,6 @@
 from pico2d import *
 import random
+import mario
 
 MAXHEIGHT = 933
 MAXWIDTH = 1100
@@ -76,18 +77,40 @@ class Mgoomba: # 32x32
         elif self.isTWR == False:
             self.x += 0.5
 
-class M:
-    def __init__(self):
-        self.mAI = load_image('resource/enemies.png')
-        self.frame = 0
-        self.x
-
-    def update(self):
-        pass
-
     def draw(self):
         global EMAXHEIGHT
         global EMAXWIDTH
         global ESIZE
         self.Goomba.clip_draw(self.frame * 32, EMAXHEIGHT - ESIZE*2, 32, 32, self.x, self.y)
+        pass
+
+class M:
+    def __init__(self):
+        self.mAI = load_image('resource/enemies.png')
+        self.frame = 0
+        self.x = random.randint(100,300)
+        self.y = basicY
+
+    def update(self):
+        global frameE
+        if frameE % 16 == 0:
+            self.frame = (self.frame + 1) % 2
+        frameE += 1
+        mx = mario.Mario.getMX(self)
+
+        print(mx)
+
+        # while (self.x == mx):
+        #     if self.x > mx:
+        #         if self.x - mx < 40:
+        #             self.x += 3
+        #     elif self.x < mx:
+        #         if mx - self.x < 40:
+        #             self.x -= 3
+
+    def draw(self):
+        global EMAXHEIGHT
+        global EMAXWIDTH
+        global ESIZE
+        self.mAI.clip_draw(self.frame * 32 + (32 * 3), EMAXHEIGHT - ESIZE*2, 32, 32, self.x, self.y)
         pass

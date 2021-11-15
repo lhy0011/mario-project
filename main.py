@@ -11,6 +11,7 @@ s = sound.BGM() #소리
 bg = map.BG() #배경
 g = map.Ground() #타일
 goomba = map.Mgoomba() #몬스터
+mai = map.M()
 
 while mario.MOVING:
     clear_canvas()
@@ -19,8 +20,10 @@ while mario.MOVING:
     mario.cmove()
     p.update()
     goomba.update()
+    mai.update()
     goomba.draw()
     p.draw()
+    mai.draw()
     update_canvas()
     delay(0.01)
 

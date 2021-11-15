@@ -73,10 +73,10 @@ class Mario: #
         self.x = 400
         self.y = basicY
 
-    def getX(self):
+    def getMX(self):
         return self.x
 
-    def getY(self):
+    def getMY(self):
         return self.y
 
     def update(self):
