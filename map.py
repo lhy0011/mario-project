@@ -16,8 +16,10 @@ basicY = 83
 class BG: # 배경 사진
     def __init__(self):
         self.bg = load_image('resource/background.png')
-    def drawBG(self):
+    def draw(self):
         self.bg.draw(500, 500)
+    def update(self):
+        pass
 
 class BGG: # 그 외 배경
     def __init__(self):
@@ -29,7 +31,7 @@ class Ground: # 34x34
     def __init__(self):
         self.tile = load_image('resource/tile_set.png')
     pass
-    def drawGround(self):
+    def draw(self):
         global SIZES
         global SIZEB
         global MAXHEIGHT
@@ -44,6 +46,9 @@ class Ground: # 34x34
             self.tile.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, SIZES * i, groundY)
             self.tile.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, SIZES * i, groundY-SIZES)
 
+        pass
+
+    def update(self):
         pass
 
 

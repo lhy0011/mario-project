@@ -1,59 +1,220 @@
+import game_framework
 from pico2d import *
-import keyboard as k
+from fireball import fireBall
 
-MOVING = True
-DIRECL = False
-MAXSPEED = 5
-MAXHEIGHT = 150 # 점프높이
-frameS = 0
-isJump = False
-isBreakR = False
-isBreakL = False
-isDescend = False
+import game_world
+
+PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
+RUN_SPEED_KMPH = 40.0  # Km / Hour
+RUN_SPEED_PPS = (RUN_SPEED_KMPH * 1000.0 / 60.0 / 60.0 * PIXEL_PER_METER)
+
+# Boy Action Speed
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 8
+
+JUMP_MAX_SPEED = 5
+JUMP_MIN_SPEED = 2
+JUMP_GRAVITY = 0.1
 
 basicY = 83
-
-def cmove():
-    global MOVING
-    global DIRECL
-    global isJump
-    global isBreakR
-    global isBreakL
-    global dir  # -1 : left // 1 : right
-    dir = 0
-
-    if k.is_pressed('right'):
-        DIRECL = False
-        dir += 1
-        #print('오른쪽')
-        if k.is_pressed('left'):
-            isBreakL = True
-            DIRECL = True
-            dir = -1
-        elif k.is_pressed('a'):
-            isJump = True
-
-    elif k.is_pressed('left'):
-        DIRECL = True
-        dir -= 1
-        #print('왼쪽')
-        if k.is_pressed('right'):
-            isBreakR = True
-            DIRECL = False
-            dir = 1
-        elif k.is_pressed('a'):
-            isJump = True
-
-    elif k.is_pressed("a"):
-        isJump = True
+MAXSPEED = 5
+MAXHEIGHT = 250 # 점프높이
+frameS = 0
 
 
-    events = get_events()
-    for e in events:
-        if e.type == SDL_QUIT:
-            MOVING = False
-        elif e.type == SDL_KEYDOWN and e.type == SDLK_a:
-            isJump = True
+RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, DASH_TIMER, A_DOWN, D_DOWN, CROUCH_DOWN, CROUCH_UP, DEAD, FIRE = range(11)
+
+key_event_table = {
+    (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
+    (SDL_KEYDOWN, SDLK_LEFT): LEFT_DOWN,
+    (SDL_KEYUP, SDLK_RIGHT): RIGHT_UP,
+    (SDL_KEYUP, SDLK_LEFT): LEFT_UP,
+    #(SDL_KEYDOWN, SDLK_DOWN): CROUCH_DOWN, # 웅크리기
+    #(SDL_KEYUP, SDLK_DOWN): CROUCH_UP,
+    (SDL_KEYDOWN, SDLK_a): A_DOWN, # 점프
+    (SDL_KEYDOWN, SDLK_d): D_DOWN # 공격버튼 //
+}
+
+# Boy States
+
+
+class IdleState:
+
+    def enter(mario, event):
+        if event == RIGHT_DOWN:
+            mario.velocity += RUN_SPEED_PPS
+            mario.dir = 1
+        elif event == LEFT_DOWN:
+            mario.velocity -= RUN_SPEED_PPS
+            mario.dir = -1
+        elif event == RIGHT_UP:
+            mario.velocity -= RUN_SPEED_PPS
+        elif event == LEFT_UP:
+            mario.velocity += RUN_SPEED_PPS
+        mario.timer = 100
+
+    def exit(mario, event):
+        if event == A_DOWN:
+            mario.isJump = True
+            mario.jumpSpeed = JUMP_MAX_SPEED
+            mario.curY = mario.y
+
+        if event == D_DOWN:
+            mario.fireball()
+        pass
+
+    def do(mario):
+        if mario.isJump == True:
+            if mario.jumpSpeed > JUMP_MIN_SPEED:
+                mario.y += mario.jumpSpeed
+                mario.jumpSpeed -= JUMP_GRAVITY
+            else:
+                mario.y += mario.jumpSpeed
+        if mario.y > (basicY + MAXHEIGHT):
+            mario.isDescend = True
+            mario.isJump = False
+        if mario.isJump == False and mario.isDescend == True:
+            if mario.jumpSpeed < JUMP_MAX_SPEED:
+                mario.y -= mario.jumpSpeed
+                mario.jumpSpeed += JUMP_GRAVITY
+            else:
+                mario.y -= mario.jumpSpeed
+            if mario.y <= basicY:
+                mario.isDescend = False
+        pass
+
+    def draw(mario):
+        if mario.dir == 1:
+            if mario.isJump == True:
+                mario.marioJR.draw(mario.x, mario.y)
+            else:
+                mario.marioR.draw(mario.x, mario.y)
+        else:
+            if mario.isJump == True:
+                mario.marioJL.draw(mario.x, mario.y)
+            else:
+                mario.marioL.draw(mario.x, mario.y)
+
+class RunState:
+    def enter(mario, event):
+        if event == RIGHT_DOWN:
+            mario.velocity += RUN_SPEED_PPS
+            mario.dir = 1
+        elif event == LEFT_DOWN:
+            mario.velocity -= RUN_SPEED_PPS
+            mario.dir = -1
+        elif event == RIGHT_UP:
+            mario.velocity -= RUN_SPEED_PPS
+        elif event == LEFT_UP:
+            mario.velocity += RUN_SPEED_PPS
+        #mario.dir = clamp(-1, mario.velocity, 1)
+
+    def exit(mario, event):
+        if event == A_DOWN:
+            mario.isJump = True
+            mario.jumpSpeed = JUMP_MAX_SPEED
+            mario.curY = mario.y
+        if event == D_DOWN:
+            mario.fireball()
+        pass
+
+    def do(mario):
+        mario.frame = (mario.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        mario.x += mario.velocity * game_framework.frame_time
+        mario.x = clamp(25, mario.x, 1000-25)
+        if mario.isJump == True:
+            if mario.jumpSpeed > JUMP_MIN_SPEED:
+                mario.y += mario.jumpSpeed
+                mario.jumpSpeed -= JUMP_GRAVITY
+            else:
+                mario.y += mario.jumpSpeed
+        if mario.y > (basicY + MAXHEIGHT):
+            mario.isDescend = True
+            mario.isJump = False
+        if mario.isJump == False and mario.isDescend == True:
+            if mario.jumpSpeed < JUMP_MAX_SPEED:
+                mario.y -= mario.jumpSpeed
+                mario.jumpSpeed += JUMP_GRAVITY
+            else:
+                mario.y -= mario.jumpSpeed
+            if mario.y <= basicY:
+                mario.isDescend = False
+
+        pass
+
+    def draw(mario):
+        if mario.dir == 1:
+            if mario.isJump == True:
+                mario.marioJR.draw(mario.x, mario.y)
+            else:
+                mario.marioRR.clip_draw(int(mario.frame) * 36, 0, 36, 34, mario.x, mario.y)
+        else:
+            if mario.isJump == True:
+                mario.marioJL.draw(mario.x, mario.y)
+            else:
+                mario.marioRL.clip_draw(int(mario.frame) * 36, 0, 36, 34, mario.x, mario.y)
+
+
+class CrouchState: #수정필요
+    def enter(mario, event):
+        if event == RIGHT_DOWN:
+            mario.velocity += RUN_SPEED_PPS
+            mario.dir = 1
+        elif event == LEFT_DOWN:
+            mario.velocity -= RUN_SPEED_PPS
+            mario.dir = -1
+        elif event == RIGHT_UP:
+            mario.velocity -= RUN_SPEED_PPS
+        elif event == LEFT_UP:
+            mario.velocity += RUN_SPEED_PPS
+        mario.timer = 100
+
+    def exit(mario, event):
+        if event == A_DOWN:
+            mario.isJump = True
+        pass
+
+    def do(mario):
+        if mario.isJump == True:
+            pass #(점프내용 구현)
+        pass
+
+    def draw(mario):
+        if mario.dir == 1:
+            if mario.isJump == True:
+                mario.marioJR.draw(mario.x, mario.y)
+            else:
+                mario.marioR.draw(mario.x, mario.y)
+        else:
+            if mario.isJump == True:
+                mario.marioJL.draw(mario.x, mario.y)
+            else:
+                mario.marioL.draw(mario.x, mario.y)
+
+
+class DeadState:
+    def enter(mario, event):
+        pass
+
+    def exit(mario, event):
+        pass
+
+    def do(mario):
+        pass
+
+    def draw(mario):
+        mario.marioD.draw(mario.x, mario.y)
+
+
+
+
+
+next_state_table = {
+    IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, A_DOWN: IdleState, D_DOWN: IdleState, DEAD: DeadState},
+    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, A_DOWN: RunState, D_DOWN: RunState, DEAD: DeadState},
+    DeadState: {RIGHT_UP: DeadState, LEFT_UP: DeadState, RIGHT_DOWN: DeadState, LEFT_DOWN: DeadState, A_DOWN: DeadState, D_DOWN: DeadState}
+}
 
 
 
@@ -67,96 +228,63 @@ class Mario: #
         self.marioJL = load_image('resource/marioJumpL.png')
         self.marioBR = load_image('resource/marioBreakR.png')
         self.marioBL = load_image('resource/marioBreakL.png')
+        self.marioD = load_image('resource/marioDead.png')
+        # self.marioC = load_image('resource/')
+        self.velocity = 0
         self.frame = 0
+        self.dir = 1
         self.speedX = 0.0
         self.speedY = 5
         self.x = 400
         self.y = basicY
+        self.font = load_font('ENCR10B.TTF', 16)
+        self.curY = 0
 
-    def getMX(self):
+        self.isJump = False
+        self.jumpSpeed= JUMP_MAX_SPEED
+        self.jumpTimer = 0
+        self.isDescend = False
+
+        self.life = 1
+
+        self.event_que = []
+        self.cur_state = IdleState
+        self.cur_state.enter(self, None)
+
+    def add_event(self, event):
+        self.event_que.insert(0, event)
+
+    def fireball(self):
+        ball = fireBall(self.x, self.y, self.dir)
+        game_world.add_object(ball, 1)
+
+    def get_MX(self):
         return self.x
 
-    def getMY(self):
+    def get_MY(self):
         return self.y
 
+    def get_bb(self):
+        return self.x - 15, self.y - 20, self.x + 15, self.y + 20
+
     def update(self):
-        global MAXSPEED
-        global frameS
-        global isBreak
-        global isJump
-        global isDescend
-        global isBreakR
-        global isBreakL
-
-        if isJump == True:
-            if self.y < (basicY + MAXHEIGHT):
-                self.y += self.speedY
-            elif self.y == (basicY + MAXHEIGHT):
-                isJump = False
-                isDescend = True
-        elif isJump == False:
-            if self.y > basicY:
-                self.y -= self.speedY
-            elif self.y == basicY:
-                isDescend = False
-
-        if isBreakR == True:
-            isBreakR = False
-
-        if isBreakL == True:
-            isBreakL = False
-
-        # 속도 점점빠르게
-        if self.speedX < MAXSPEED:
-            self.speedX += 0.04
-        self.x += (dir * self.speedX)
-
-        # 미끄러지는 효과 ... 일단시도
-        # if dir == 0 and self.speedX > 1:
-        #     if DIRECL == False:
-        #         self.speedX -= 0.6
-        #         self.x += 0.6
-        #     elif DIRECL == True:
-        #         self.speedX -= 0.6
-        #         self.x -= 0.6
-
-        if dir == 0 and self.speedX > 1:
-            self.speedX = 0
-
-        # 프레임 속도 조절
-        if frameS % 8 == 0:
-            self.frame = (self.frame + 1) % 3
-        frameS += 1
-
+        self.cur_state.do(self)
+        if len(self.event_que) > 0:
+            event = self.event_que.pop()
+            self.cur_state.exit(self, event)
+            self.cur_state = next_state_table[self.cur_state][event]
+            self.cur_state.enter(self, event)
 
     def draw(self):
-        global dir
-        global isJump
+        self.cur_state.draw(self)
+        draw_rectangle(*self.get_bb())
 
-        if isJump == True and DIRECL == False: #jump
-            self.marioJR.draw(self.x, self.y)
-        elif isJump == True and DIRECL == True:
-            self.marioJL.draw(self.x, self.y)
-        elif isDescend == True and DIRECL == False:
-            self.marioJR.draw(self.x, self.y)
-        elif isDescend == True and DIRECL == True:
-            self.marioJR.draw(self.x, self.y)
+    def handle_event(self, event):
+        if (event.type, event.key) in key_event_table:
+            key_event = key_event_table[(event.type, event.key)]
+            self.add_event(key_event)
 
-        elif isBreakR == True and DIRECL == False:
-            self.marioBR.draw(self.x, self.y)
-        elif isBreakL == True and DIRECL == True:
-            self.marioBL.draw(self.x, self.y)
-
-
-        elif dir == 0 and DIRECL == False: #stand
-            self.marioR.draw(self.x, self.y)
-        elif dir == 0 and DIRECL == True:
-            self.marioL.draw(self.x, self.y)
-        elif dir == 1 and isJump == False : #run
-            self.marioRR.clip_draw(self.frame * 36, 0, 36, 34, self.x, self.y)
-        elif dir == -1 and isJump == False :
-            self.marioRL.clip_draw(self.frame * 36, 0, 36, 34, self.x, self.y)
-
-
-
-
+    def loseLife(self):
+        self.life -= 1
+        if self.life == 0:
+            self.add_event(DEAD)
