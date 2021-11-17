@@ -5,24 +5,33 @@ import os
 from pico2d import *
 import game_framework
 import game_world
+import map1
 
 from timer import Timer
 from mario import Mario
 from monster import M, Mgoomba
-from map import BG, Ground
+from map import BG, Ground, Coin,Cloud
+from score import Score
 
 name = "MainState"
+
+x = 0
 
 #배경
 bg = None
 ground = None
+cloud = None
 
+coins = []
 
+score = None
 timer = None
+
 player = None
+
 #몬스터
 m = None
-goomba = None
+goombas = []
 
 
 def collide(a, b):
@@ -49,10 +58,10 @@ def Mcollide(a, b):
     if top_a < bottom_b: return False
     if bottom_a > top_b: return False
 
-    # if :
-    #     isKill = True
-    # else:
-    #     isDead = True
+    if int(top_b) > int(bottom_a):
+        isKill = True
+    else:
+        isDead = True
 
     return True
 
@@ -67,18 +76,30 @@ def enter():
     ground = Ground()
     game_world.add_object(ground, 1)
 
+    global cloud
+    cloud = Cloud()
+    game_world.add_object(cloud, 1)
+
+    global coins
+    coins = [Coin(map1.Map1.coin[i]) for i in range(3)]
+    game_world.add_objects(coins, 2)
+
     global m
     m = M()
     game_world.add_object(m, 2)
 
-    global goomba
-    goomba = Mgoomba()
-    game_world.add_object(goomba, 2)
+    global goombas
+    goombas = [Mgoomba(map1.Map1.goomba[i]) for i in range(3)]
+    game_world.add_objects(goombas, 2)
 
 
     global timer
     timer = Timer()
     game_world.add_object(timer, 2)
+
+    global score
+    score = Score()
+    game_world.add_object(score, 2)
 
     global player
     player = Mario()
@@ -112,26 +133,53 @@ def handle_events():
 
 
 def update():
+    global x, isKill, isDead
+
     for game_object in game_world.all_objects():
         game_object.update()
 
+    xx = player.get_MX()
+    if xx > x + 500:
+        x = xx - 500
+    for game_object in game_world.all_objects():
+        game_object.fix(x)
 
-    if Mcollide(player, goomba):
-        if isKill == True:
-            # enemies.monster.remove(goomba)
-            game_world.remove_object(goomba)
-        elif isDead == True:
-            player.loseLife()
-            timer.stop()
-            pass
+
+    for coin in coins:
+        if collide(player, coin):
+            score.coin += 1
+            score.sco += 100
+            coins.remove(coin)
+            game_world.remove_object(coin)
+
+    # 몬스터와 충돌체크
+
+    for goomba in goombas:
+        if Mcollide(player, goomba):
+            if isKill == True:
+                score.sco += 200
+                goombas.remove(goomba)
+                game_world.remove_object(goomba)
+                isKill = False
+            elif isDead == True:
+                player.loseLife()
+                timer.stop()
+
+
     if Mcollide(player, m):
         if isKill == True:
-            # enemies.monster.remove(m)
+            score.sco += 200
+            m.remove()
             game_world.remove_object(m)
+            # isKill = False
         elif isDead == True:
             player.loseLife()
             timer.stop()
             pass
+
+    # if Mcollide(player.Mario.fireball.ball, goomba):
+    #     game_world.remove_object(goomba)
+
 
 
 

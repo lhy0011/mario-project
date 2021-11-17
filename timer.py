@@ -20,3 +20,6 @@ class Timer:
 
     def stop(self):
         self.isStop = True
+
+    def fix(self, xx):
+        pass

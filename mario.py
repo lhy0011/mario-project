@@ -3,6 +3,7 @@ from pico2d import *
 from fireball import fireBall
 
 import game_world
+import main_state
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 40.0  # Km / Hour
@@ -15,7 +16,7 @@ FRAMES_PER_ACTION = 8
 
 JUMP_MAX_SPEED = 5
 JUMP_MIN_SPEED = 2
-JUMP_GRAVITY = 0.1
+JUMP_GRAVITY = 0.05
 
 basicY = 83
 MAXSPEED = 5
@@ -80,21 +81,21 @@ class IdleState:
                 mario.jumpSpeed += JUMP_GRAVITY
             else:
                 mario.y -= mario.jumpSpeed
-            if mario.y <= basicY:
+            if int(mario.y) <= basicY:
                 mario.isDescend = False
         pass
 
     def draw(mario):
         if mario.dir == 1:
             if mario.isJump == True:
-                mario.marioJR.draw(mario.x, mario.y)
+                mario.marioJR.draw(mario.x - mario.fixX, mario.y)
             else:
-                mario.marioR.draw(mario.x, mario.y)
+                mario.marioR.draw(mario.x - mario.fixX, mario.y)
         else:
             if mario.isJump == True:
-                mario.marioJL.draw(mario.x, mario.y)
+                mario.marioJL.draw(mario.x - mario.fixX, mario.y)
             else:
-                mario.marioL.draw(mario.x, mario.y)
+                mario.marioL.draw(mario.x - mario.fixX, mario.y)
 
 class RunState:
     def enter(mario, event):
@@ -122,7 +123,7 @@ class RunState:
     def do(mario):
         mario.frame = (mario.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
         mario.x += mario.velocity * game_framework.frame_time
-        mario.x = clamp(25, mario.x, 1000-25)
+        # mario.x = clamp(25, mario.x, 500)
         if mario.isJump == True:
             if mario.jumpSpeed > JUMP_MIN_SPEED:
                 mario.y += mario.jumpSpeed
@@ -138,7 +139,7 @@ class RunState:
                 mario.jumpSpeed += JUMP_GRAVITY
             else:
                 mario.y -= mario.jumpSpeed
-            if mario.y <= basicY:
+            if int(mario.y) <= basicY:
                 mario.isDescend = False
 
         pass
@@ -146,14 +147,14 @@ class RunState:
     def draw(mario):
         if mario.dir == 1:
             if mario.isJump == True:
-                mario.marioJR.draw(mario.x, mario.y)
+                mario.marioJR.draw(mario.x - mario.fixX, mario.y)
             else:
-                mario.marioRR.clip_draw(int(mario.frame) * 36, 0, 36, 34, mario.x, mario.y)
+                mario.marioRR.clip_draw(int(mario.frame) * 36, 0, 36, 34, mario.x - mario.fixX, mario.y)
         else:
             if mario.isJump == True:
-                mario.marioJL.draw(mario.x, mario.y)
+                mario.marioJL.draw(mario.x - mario.fixX, mario.y)
             else:
-                mario.marioRL.clip_draw(int(mario.frame) * 36, 0, 36, 34, mario.x, mario.y)
+                mario.marioRL.clip_draw(int(mario.frame) * 36, 0, 36, 34, mario.x - mario.fixX, mario.y)
 
 
 class CrouchState: #수정필요
@@ -183,14 +184,14 @@ class CrouchState: #수정필요
     def draw(mario):
         if mario.dir == 1:
             if mario.isJump == True:
-                mario.marioJR.draw(mario.x, mario.y)
+                mario.marioJR.draw(mario.x - mario.fixX, mario.y)
             else:
-                mario.marioR.draw(mario.x, mario.y)
+                mario.marioR.draw(mario.x - mario.fixX, mario.y)
         else:
             if mario.isJump == True:
-                mario.marioJL.draw(mario.x, mario.y)
+                mario.marioJL.draw(mario.x - mario.fixX, mario.y)
             else:
-                mario.marioL.draw(mario.x, mario.y)
+                mario.marioL.draw(mario.x - mario.fixX, mario.y)
 
 
 class DeadState:
@@ -204,7 +205,7 @@ class DeadState:
         pass
 
     def draw(mario):
-        mario.marioD.draw(mario.x, mario.y)
+        mario.marioD.draw(mario.x - mario.fixX, mario.y)
 
 
 
@@ -250,12 +251,13 @@ class Mario: #
         self.event_que = []
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
+        self.fixX = 0
 
     def add_event(self, event):
         self.event_que.insert(0, event)
 
     def fireball(self):
-        ball = fireBall(self.x, self.y, self.dir)
+        ball = fireBall(self.x - self.fixX, self.y, self.dir)
         game_world.add_object(ball, 1)
 
     def get_MX(self):
@@ -265,7 +267,7 @@ class Mario: #
         return self.y
 
     def get_bb(self):
-        return self.x - 15, self.y - 20, self.x + 15, self.y + 20
+        return self.x - 15 - self.fixX, self.y - 20, self.x + 15 - self.fixX, self.y + 20
 
     def update(self):
         self.cur_state.do(self)
@@ -288,3 +290,6 @@ class Mario: #
         self.life -= 1
         if self.life == 0:
             self.add_event(DEAD)
+
+    def fix(self, xx):
+        self.fixX = xx

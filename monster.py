@@ -19,20 +19,22 @@ ESIZE = 32
 
 class Mgoomba: # 32x32
     image = None
-    def __init__(self):
+    def __init__(self, x):
         Mgoomba.image = load_image('resource/enemies.png')
         self.frame = 0
-        self.x = random.randint(100, 300)
+        self.x = x
         self.y = basicY
         self.isTWL = False
         self.isTWR = True
         self. frame = 0
+        self.fixX = 0
 
     def get_bb(self):
-        return self.x - 15, self.y - 20, self.x + 15, self.y + 20
+        return self.x - 15 - self.fixX, self.y - 20, self.x + 15 - self.fixX, self.y + 20
 
     def do(self):
-        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        # self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        pass
 
     def update(self):
 
@@ -40,7 +42,7 @@ class Mgoomba: # 32x32
         if self.x < 0:
             self.isTWL = True
             self.isTWR = False
-        if self.x > 800:
+        if self.x > 300:
             self.isTWR = True
             self.isTWL = False
         if self.isTWL == False:
@@ -52,28 +54,33 @@ class Mgoomba: # 32x32
         global EMAXHEIGHT
         global EMAXWIDTH
         global ESIZE
-        Mgoomba.image.clip_draw(int(self.frame) * 33, EMAXHEIGHT - ESIZE*2, 33, 32, self.x, self.y)
+        Mgoomba.image.clip_draw(int(self.frame) * 33, EMAXHEIGHT - ESIZE*2, 33, 32, self.x - self.fixX, self.y)
         draw_rectangle(*self.get_bb())
+
+    def fix(self, xx):
+        self.fixX = xx
 
 class M:
     image = None
     def __init__(self):
         M.image = load_image('resource/enemies.png')
         self.frame = 0
-        self.x = random.randint(100,300)
+        self.x = 250
         self.y = basicY
+        self.fixX = 0
 
     def get_bb(self):
-        return self.x - 15, self.y - 20, self.x + 15, self.y + 20
+        return self.x - 15 - self.fixX, self.y - 20, self.x + 15 - self.fixX, self.y + 20
 
     def do(self):
-        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        # self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        pass
 
     def update(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
         mx = Mario.get_MX(main_state.player)
 
-        print(mx)
+        # print(mx)
 
 
         if self.x > mx:
@@ -87,5 +94,12 @@ class M:
         global EMAXHEIGHT
         global EMAXWIDTH
         global ESIZE
-        M.image.clip_draw(int(self.frame) * 33 + (33 * 3), EMAXHEIGHT - ESIZE*2, 33, 32, self.x, self.y)
+        M.image.clip_draw(int(self.frame) * 33 + (33 * 3), EMAXHEIGHT - ESIZE*2, 33, 32, self.x - self.fixX, self.y)
         draw_rectangle(*self.get_bb())
+
+    def fix(self, xx):
+        self.fixX = xx
+
+    def remove(self):
+        self.x = -500
+        self.y = -500

@@ -2,6 +2,7 @@ import random
 from pico2d import *
 import game_world
 import game_framework
+# import main_state
 
 PIXEL_PER_METER = (10.0 / 0.3)
 BALL_SPEED_KMPH = 100.0
@@ -19,6 +20,7 @@ class fireBall:
         else:
             self.x = x + 20
         self.speed = BALL_SPEED_PPS
+        self.fixX = 0
 
     def get_bb(self):
         # fill here
@@ -32,8 +34,17 @@ class fireBall:
     def update(self):
         self.x += self.speed * game_framework.frame_time * self.dir
 
+        # for goomba in main_state.goombas:
+        #     if main_state.collide(fireBall,goomba):
+        #         main_state.score.sco += 200
+        #         main_state.goombas.remove(goomba)
+        #         game_world.remove_object(goomba)
+
         if self.x < 25 or self.x > 1000 - 25:
             game_world.remove_object(self)
 
     def stop(self):
         self.speed = 0
+
+    def fix(self, xx):
+        self.fixX = xx

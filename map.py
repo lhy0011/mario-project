@@ -1,6 +1,12 @@
 from pico2d import *
 import random
 import mario
+import map1
+import game_framework
+
+TIME_PER_ACTION = 1.0
+ACTION_PER_TIME = 0.5 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 8
 
 MAXHEIGHT = 933
 MAXWIDTH = 1100
@@ -13,24 +19,14 @@ basicY = 83
 
 #size * 1 = 벽돌, size * 9~10 파이프
 
-class BG: # 배경 사진
-    def __init__(self):
-        self.bg = load_image('resource/background.png')
-    def draw(self):
-        self.bg.draw(500, 500)
-    def update(self):
-        pass
-
-class BGG: # 그 외 배경
-    def __init__(self):
-        self.cloud = load_image('resource/tile_set.png')
-    def drawBGG(self):
-        pass
-
 class Ground: # 34x34
+    image = None
     def __init__(self):
-        self.tile = load_image('resource/tile_set.png')
-    pass
+        Ground.image = load_image('resource/tile_set.png')
+        self.x = 0
+        self.y = 51
+        self.fixX = 0
+
     def draw(self):
         global SIZES
         global SIZEB
@@ -39,16 +35,166 @@ class Ground: # 34x34
         global MAX_X
         global MAX_Y
 
+
         groundX = 51
         groundY = 51
 
-        for i in range(30):
-            self.tile.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, SIZES * i, groundY)
-            self.tile.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, SIZES * i, groundY-SIZES)
+        for i in range(len(map1.Map1.ground)):
+            self.x = map1.Map1.ground[i]
+            # Ground.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, map1.Map1.ground[i] - self.fixX, groundY)
+            # Ground.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, map1.Map1.ground[i] - self.fixX, groundY-SIZES)
+            # print(map1.Map1.ground[i])
+
+            Ground.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, groundY)
+            Ground.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, groundY - SIZES)
+            draw_rectangle(*self.get_bb())
 
         pass
 
     def update(self):
         pass
 
+    def fix(self, xx):
+        self.fixX = xx
 
+    def get_bb(self):
+        return self.x - 17 - self.fixX, self.y - 17, self.x + 17 - self.fixX, self.y + 17
+
+class Block:
+    image = None
+    def __init__(self):
+        Block.image = load_image('resource/tile_set.png')
+        self.x = 0
+        self.y = 0
+        self.fixX = 0
+
+    def draw(self):
+        pass
+
+    def update(self):
+        pass
+
+    def fix(self, xx):
+        self.fixX = xx
+
+
+
+###### 아이템  16x16
+
+class Coin:
+    image = None
+    def __init__(self, x):
+        Coin.image = load_image('resource/coin.png')
+        self.frame = 0
+        self.x, self.y = x, 238
+        self.fixX = 0
+
+    def draw(self):
+        for i in range(len(map1.Map1.coin)):
+            Coin.image.clip_draw(int(self.frame) * 16, 0, 16, 16, self.x - self.fixX, self.y, 34, 34)
+            # Coin.image.clip_draw(int(self.frame) * 16, 0, 16, 16, map1.Map1.coin[i] - self.fixX, self.y, 34, 34)
+            draw_rectangle(*self.get_bb())
+        pass
+
+    def update(self):
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+        pass
+
+    def fix(self, xx):
+        self.fixX = xx
+
+    def get_bb(self):
+        return self.x - 15 - self.fixX, self.y - 17, self.x + 15 - self.fixX, self.y + 17
+
+
+class Item1:
+    image = None
+
+    def __init__(self):
+        Item1.image = load_image('resource/item1.png')
+        self.frame = 0
+        self.x, self.y = 0, 0
+        self.fixX = 0
+
+    def draw(self):
+        Item1.image.clip_draw(int(self.frame) * 16, 0, 16, 16, self.x - self.fixX, self.y)
+        pass
+
+    def update(self):
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+        pass
+
+    def fix(self, xx):
+        self.fixX = xx
+
+    def get_bb(self):
+        return self.x - 17 - self.fixX, self.y - 17, self.x + 17 - self.fixX, self.y + 17
+
+
+class Item2:
+    image = None
+
+    def __init__(self):
+        Item2.image = load_image('resource/item2.png')
+        self.frame = 0
+        self.x, self.y = 0, 0
+        self.fixX = 0
+
+    def draw(self):
+        Item2.image.clip_draw(int(self.frame) * 16, 0, 16, 16, self.x - self.fixX, self.y)
+        pass
+
+    def update(self):
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+        pass
+
+    def fix(self, xx):
+        self.fixX = xx
+
+    def get_bb(self):
+        return self.x - 17 - self.fixX, self.y - 17, self.x + 17 - self.fixX, self.y + 17
+
+
+
+##### 배경 (오브젝트X)
+
+class BG: # 배경 사진
+    def __init__(self):
+        self.bg = load_image('resource/background.png')
+    def draw(self):
+        self.bg.draw(500, 500)
+    def update(self):
+        pass
+    def fix(self, xx):
+        self.fixX = xx
+
+class Cloud: # 그 외 배경
+    image = None
+    def __init__(self):
+        Cloud.image = load_image('resource/tile_set.png')
+        self.x = 0
+        self.y = 0
+        self.fixX = 0
+    def draw(self):
+        for i in range(6):
+            Cloud.image.clip_draw(0, 0, (SIZES-1) * 3, (SIZES-1) * 2, 1000 * i - self.fixX, 500)
+            Cloud.image.clip_draw(0, 0, (SIZES-1) * 3, (SIZES-1) * 2, 1000 * i - self.fixX +500, 400)
+
+        pass
+    def update(self):
+        pass
+    def fix(self, xx):
+        self.fixX = xx
+
+class Tree:
+    def __init__(self):
+        self.tree = load_image('resource/tile_set.png')
+        self.x = 0
+        self.y = 0
+        self.fixX = 0
+    def draw(self):
+        pass
+    def update(self):
+        pass
+    def fix(self, xx):
+        self.fixX = xx
