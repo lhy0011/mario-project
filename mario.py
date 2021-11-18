@@ -88,7 +88,7 @@ class IdleState:
 
     def draw(mario):
         if mario.dir == 1:
-            if mario.isJump == True:
+            if mario.isJump or mario.isDescend:
                 if mario.ma2:
                     mario.mario2J.draw(mario.x - mario.fixX, mario.y)
                 else:
@@ -99,7 +99,7 @@ class IdleState:
                 else:
                     mario.marioR.draw(mario.x - mario.fixX, mario.y)
         else:
-            if mario.isJump == True:
+            if mario.isJump or mario.isDescend:
                 if mario.ma2:
                     mario.mario2J.clip_composite_draw(0, 0, 36, 34, 0, 'h', mario.x - mario.fixX, mario.y)
                 else:
@@ -160,7 +160,7 @@ class RunState:
 
     def draw(mario):
         if mario.dir == 1:
-            if mario.isJump == True:
+            if mario.isJump or mario.isDescend:
                 if mario.ma2:
                     mario.mario2J.draw(mario.x - mario.fixX, mario.y)
                 else:
@@ -171,7 +171,7 @@ class RunState:
                 else:
                     mario.marioRR.clip_draw(int(mario.frame) * 36, 0, 36, 34, mario.x - mario.fixX, mario.y)
         else:
-            if mario.isJump == True:
+            if mario.isJump or mario.isDescend:
                 if mario.ma2:
                     mario.mario2J.clip_composite_draw(0, 0, 36, 34, 0, 'h', mario.x - mario.fixX, mario.y)
                 else:
