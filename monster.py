@@ -65,7 +65,7 @@ class M:
     def __init__(self):
         M.image = load_image('resource/enemies.png')
         self.frame = 0
-        self.x = 700
+        self.x = 1200
         self.y = basicY
         self.fixX = 0
 
