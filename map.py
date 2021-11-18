@@ -155,10 +155,6 @@ class Item2:
     def get_bb(self):
         return self.x - 17 - self.fixX, self.y - 17, self.x + 17 - self.fixX, self.y + 17
 
-    def remove(self):
-        self.x = -500
-        self.y = -500
-
 
 
 ##### 배경 (오브젝트X)

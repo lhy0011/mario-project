@@ -8,7 +8,6 @@ import game_world
 import gameover_state
 import map1
 
-import sound
 from timer import Timer
 from mario import Mario
 from monster import M, Mgoomba
@@ -20,7 +19,6 @@ name = "MainState"
 x = 0
 
 #배경
-
 bg = None
 ground = None
 cloud = None
@@ -159,8 +157,6 @@ def update():
 
     if collide(player, item2):
         player.ma2 = True
-        score.sco += 500
-        item2.remove()
         game_world.remove_object(item2)
 
 
