@@ -24,7 +24,7 @@ class fireBall:
 
     def get_bb(self):
         # fill here
-        return self.x - 5, self.y - 5, self.x + 5, self.y +5
+        return self.x - 5, self.y - 5, self.x + 5, self.y + 5
 
     def draw(self):
         self.image.draw(self.x, self.y)

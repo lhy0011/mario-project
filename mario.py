@@ -3,7 +3,7 @@ from pico2d import *
 from fireball import fireBall
 
 import game_world
-import main_state
+import gameover_state
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 40.0  # Km / Hour
@@ -62,7 +62,8 @@ class IdleState:
             mario.curY = mario.y
 
         if event == D_DOWN:
-            mario.fireball()
+            if mario.ma2:
+                mario.fireball()
         pass
 
     def do(mario):
@@ -88,14 +89,26 @@ class IdleState:
     def draw(mario):
         if mario.dir == 1:
             if mario.isJump == True:
-                mario.marioJR.draw(mario.x - mario.fixX, mario.y)
+                if mario.ma2:
+                    mario.mario2J.draw(mario.x - mario.fixX, mario.y)
+                else:
+                    mario.marioJR.draw(mario.x - mario.fixX, mario.y)
             else:
-                mario.marioR.draw(mario.x - mario.fixX, mario.y)
+                if mario.ma2:
+                    mario.mario2.draw(mario.x - mario.fixX, mario.y)
+                else:
+                    mario.marioR.draw(mario.x - mario.fixX, mario.y)
         else:
             if mario.isJump == True:
-                mario.marioJL.draw(mario.x - mario.fixX, mario.y)
+                if mario.ma2:
+                    mario.mario2J.clip_composite_draw(0, 0, 36, 34, 0, 'h', mario.x - mario.fixX, mario.y)
+                else:
+                    mario.marioJL.draw(mario.x - mario.fixX, mario.y)
             else:
-                mario.marioL.draw(mario.x - mario.fixX, mario.y)
+                if mario.ma2:
+                    mario.mario2.clip_composite_draw(0, 0, 36, 34, 0, 'h', mario.x - mario.fixX, mario.y)
+                else:
+                    mario.marioL.draw(mario.x - mario.fixX, mario.y)
 
 class RunState:
     def enter(mario, event):
@@ -117,7 +130,8 @@ class RunState:
             mario.jumpSpeed = JUMP_MAX_SPEED
             mario.curY = mario.y
         if event == D_DOWN:
-            mario.fireball()
+            if mario.ma2:
+                mario.fireball()
         pass
 
     def do(mario):
@@ -147,14 +161,26 @@ class RunState:
     def draw(mario):
         if mario.dir == 1:
             if mario.isJump == True:
-                mario.marioJR.draw(mario.x - mario.fixX, mario.y)
+                if mario.ma2:
+                    mario.mario2J.draw(mario.x - mario.fixX, mario.y)
+                else:
+                    mario.marioJR.draw(mario.x - mario.fixX, mario.y)
             else:
-                mario.marioRR.clip_draw(int(mario.frame) * 36, 0, 36, 34, mario.x - mario.fixX, mario.y)
+                if mario.ma2:
+                    mario.mario2R.clip_draw(int(mario.frame) * 36, 0, 36, 34, mario.x - mario.fixX, mario.y)
+                else:
+                    mario.marioRR.clip_draw(int(mario.frame) * 36, 0, 36, 34, mario.x - mario.fixX, mario.y)
         else:
             if mario.isJump == True:
-                mario.marioJL.draw(mario.x - mario.fixX, mario.y)
+                if mario.ma2:
+                    mario.mario2J.clip_composite_draw(0, 0, 36, 34, 0, 'h', mario.x - mario.fixX, mario.y)
+                else:
+                    mario.marioJL.draw(mario.x - mario.fixX, mario.y)
             else:
-                mario.marioRL.clip_draw(int(mario.frame) * 36, 0, 36, 34, mario.x - mario.fixX, mario.y)
+                if mario.ma2:
+                    mario.mario2R.clip_composite_draw(int(mario.frame) * 36, 0, 36, 34, 0, 'h', mario.x - mario.fixX, mario.y, 36, 34)
+                else:
+                    mario.marioRL.clip_draw(int(mario.frame) * 36, 0, 36, 34, mario.x - mario.fixX, mario.y)
 
 
 class CrouchState: #수정필요
@@ -206,6 +232,8 @@ class DeadState:
 
     def draw(mario):
         mario.marioD.draw(mario.x - mario.fixX, mario.y)
+        mario.isdeadM = True
+
 
 
 
@@ -227,9 +255,10 @@ class Mario: #
         self.marioL = load_image('resource/marioStandL.png')
         self.marioJR = load_image('resource/marioJumpR.png')
         self.marioJL = load_image('resource/marioJumpL.png')
-        self.marioBR = load_image('resource/marioBreakR.png')
-        self.marioBL = load_image('resource/marioBreakL.png')
         self.marioD = load_image('resource/marioDead.png')
+        self.mario2 = load_image('resource/mario2_stand.png')
+        self.mario2J = load_image('resource/mario2_jump.png')
+        self.mario2R = load_image('resource/mario2_run.png')
         # self.marioC = load_image('resource/')
         self.velocity = 0
         self.frame = 0
@@ -245,6 +274,8 @@ class Mario: #
         self.jumpSpeed= JUMP_MAX_SPEED
         self.jumpTimer = 0
         self.isDescend = False
+        self.isdeadM = False
+        self.ma2 = False
 
         self.life = 1
 
@@ -293,3 +324,7 @@ class Mario: #
 
     def fix(self, xx):
         self.fixX = xx
+
+    def gameover(self):
+
+        game_framework.change_state(gameover_state)

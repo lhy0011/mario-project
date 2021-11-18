@@ -137,11 +137,12 @@ class Item2:
     def __init__(self):
         Item2.image = load_image('resource/item2.png')
         self.frame = 0
-        self.x, self.y = 0, 0
+        self.x, self.y = 700, 83
         self.fixX = 0
 
     def draw(self):
-        Item2.image.clip_draw(int(self.frame) * 16, 0, 16, 16, self.x - self.fixX, self.y)
+        Item2.image.clip_draw(int(self.frame) * 16, 0, 16, 16, self.x - self.fixX, self.y, 34, 34)
+        draw_rectangle(*self.get_bb())
         pass
 
     def update(self):

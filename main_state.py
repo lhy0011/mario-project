@@ -5,12 +5,13 @@ import os
 from pico2d import *
 import game_framework
 import game_world
+import gameover_state
 import map1
 
 from timer import Timer
 from mario import Mario
 from monster import M, Mgoomba
-from map import BG, Ground, Coin,Cloud
+from map import BG, Ground, Coin, Cloud, Item2
 from score import Score
 
 name = "MainState"
@@ -23,6 +24,7 @@ ground = None
 cloud = None
 
 coins = []
+item2 = None
 
 score = None
 timer = None
@@ -58,7 +60,12 @@ def Mcollide(a, b):
     if top_a < bottom_b: return False
     if bottom_a > top_b: return False
 
-    if int(top_b) > int(bottom_a):
+    # if int(left_a) == int(right_b) or int(right_a) == int(left_b) or left_a < right_b or right_b > left_b:
+    #     isDead = True
+    # else:
+    #     isKill = True
+
+    if int(top_b) == int(bottom_a) or int(top_b) > int(bottom_a):
         isKill = True
     else:
         isDead = True
@@ -84,6 +91,10 @@ def enter():
     coins = [Coin(map1.Map1.coin[i]) for i in range(3)]
     game_world.add_objects(coins, 2)
 
+    global item2
+    item2 = Item2()
+    game_world.add_object(item2, 2)
+
     global m
     m = M()
     game_world.add_object(m, 2)
@@ -91,7 +102,6 @@ def enter():
     global goombas
     goombas = [Mgoomba(map1.Map1.goomba[i]) for i in range(3)]
     game_world.add_objects(goombas, 2)
-
 
     global timer
     timer = Timer()
@@ -145,6 +155,11 @@ def update():
         game_object.fix(x)
 
 
+    if collide(player, item2):
+        player.ma2 = True
+        game_world.remove_object(item2)
+
+
     for coin in coins:
         if collide(player, coin):
             score.coin += 1
@@ -176,6 +191,10 @@ def update():
             player.loseLife()
             timer.stop()
             pass
+
+    if player.isdeadM:
+        delay(2)
+        game_framework.change_state(gameover_state)
 
     # if Mcollide(player.Mario.fireball.ball, goomba):
     #     game_world.remove_object(goomba)
