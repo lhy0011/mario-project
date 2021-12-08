@@ -130,11 +130,11 @@ def enter():
 
     global timer
     timer = Timer()
-    game_world.add_object(timer, 2)
+    game_world.add_object(timer, 1)
 
     global score
     score = Score()
-    game_world.add_object(score, 2)
+    game_world.add_object(score, 1)
 
     global player
     player = Mario()
@@ -204,17 +204,6 @@ def update():
                 player.curY = player.y
 
 
-    for b in blocks:
-        if collide(player, b):
-            if player.y >= b.y:
-                player.y = b.y + 35
-                player.curY = player.y
-            elif player.y <= b.y + 5:
-                player.y -= 20
-                player.isJump = False
-                player.isDescend = True
-
-
     for rc in rboxsC:
         if collide(player, rc):
             if player.y >= rc.y:
@@ -233,6 +222,16 @@ def update():
                 player.y = r.y + 35
                 player.curY = player.y
             elif player.y <= r.y + 5:
+                player.y -= 20
+                player.isJump = False
+                player.isDescend = True
+
+    for b in blocks:
+        if collide(player, b):
+            if player.y >= b.y:
+                player.y = b.y + 35
+                player.curY = player.y
+            elif player.y <= b.y + 5:
                 player.y -= 20
                 player.isJump = False
                 player.isDescend = True

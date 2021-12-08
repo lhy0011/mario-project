@@ -38,3 +38,7 @@ def all_objects():
         for o in objects[i]:
             yield o
 
+def all_objects2(i):
+    for o in objects[i]:
+        yield o
+

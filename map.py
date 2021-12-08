@@ -165,7 +165,7 @@ class Pipe2:
     def __init__(self, x):
         Pipe2.image = load_image('resource/pipe2.png')
         self.x = x
-        self.y = 204
+        self.y = 136
         self.fixX = 0
 
     def draw(self):
@@ -225,7 +225,7 @@ class RandBoxC:
         self.fixX = xx
 
     def get_bb(self):
-        return self.x - 17 - self.fixX, self.y - 17, self.x + 17 - self.fixX, self.y + 17
+        return self.x - 20 - self.fixX, self.y - 17, self.x + 20 - self.fixX, self.y + 17
 
 class RandBoxI:
     image = None
@@ -254,7 +254,7 @@ class RandBoxI:
         self.fixX = xx
 
     def get_bb(self):
-        return self.x - 17 - self.fixX, self.y - 17, self.x + 17 - self.fixX, self.y + 17
+        return self.x - 19 - self.fixX, self.y - 17, self.x + 19 - self.fixX, self.y + 17
 
 ###### 아이템  16x16
 

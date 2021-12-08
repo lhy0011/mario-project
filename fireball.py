@@ -52,8 +52,12 @@ class fireBall:
             if self.collide(g):
                 main_state.goombas.remove(g)
                 game_world.remove_object(g)
+                game_world.remove_object(self)
                 # self.S_s.play()
                 main_state.score.sco += 200
+        for i in game_world.all_objects2(2):
+            if self.collide(i):
+                game_world.remove_object(self)
 
 
     def stop(self):
