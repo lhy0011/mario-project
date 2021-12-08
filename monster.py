@@ -3,6 +3,7 @@ import random
 import game_framework
 import main_state
 from mario import Mario
+import game_world
 
 TIME_PER_ACTION = 1.0
 ACTION_PER_TIME = 0.5 / TIME_PER_ACTION
@@ -28,6 +29,9 @@ class Mgoomba: # 32x32
         self.isTWR = True
         self. frame = 0
         self.fixX = 0
+        self.S_d = load_music('sound/kick.ogg')
+        self.isDead = False
+        self.dir = -1
 
     def get_bb(self):
         return self.x - 15 - self.fixX, self.y - 20, self.x + 15 - self.fixX, self.y + 20
@@ -39,16 +43,24 @@ class Mgoomba: # 32x32
     def update(self):
 
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
-        if self.x < 0:
-            self.isTWL = True
-            self.isTWR = False
-        if self.x > 300:
-            self.isTWR = True
-            self.isTWL = False
-        if self.isTWL == False:
-            self.x -= 0.5
-        elif self.isTWR == False:
-            self.x += 0.5
+        # if self.x < 0:
+        #     self.isTWL = True
+        #     self.isTWR = False
+        # if self.x > 300:
+        #     self.isTWR = True
+        #     self.isTWL = False
+        # if self.isTWL == False:
+        #     self.x -= 0.5
+        # elif self.isTWR == False:
+        #     self.x += 0.5
+        # if self.isDead:
+        #     self.S_d.play()
+
+        for i in game_world.all_objects2(2):
+            if self.collide(i):
+                self.dir = self.dir * -1
+
+        self.x += 0.5 * self.dir
 
     def draw(self):
         global EMAXHEIGHT
@@ -59,6 +71,20 @@ class Mgoomba: # 32x32
 
     def fix(self, xx):
         self.fixX = xx
+
+    def remove(self):
+        self.x = -500
+        self.y = -500
+
+    def collide(self, b):
+        left_a, bottom_a, right_a, top_a = self.get_bb()
+        left_b, bottom_b, right_b, top_b = b.get_bb()
+
+        if left_a > right_b: return False
+        if right_a < left_b: return False
+        if top_a < bottom_b: return False
+        if bottom_a > top_b: return False
+        return True
 
 class M:
     image = None
@@ -82,7 +108,6 @@ class M:
 
         # print(mx)
 
-
         if self.x > mx:
             if self.x - mx < 300:
                 self.x -= 1
@@ -103,3 +128,14 @@ class M:
     def remove(self):
         self.x = -500
         self.y = -500
+
+
+    def collide(self, b):
+        left_a, bottom_a, right_a, top_a = self.get_bb()
+        left_b, bottom_b, right_b, top_b = b.get_bb()
+
+        if left_a > right_b: return False
+        if right_a < left_b: return False
+        if top_a < bottom_b: return False
+        if bottom_a > top_b: return False
+        return True

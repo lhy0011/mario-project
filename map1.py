@@ -25,6 +25,7 @@ class Map1:
         block.append(i)
 
     block2 = []
+    # block2.append(map.Block2())
     # for i in range()
 
     pipe1 = []
@@ -40,12 +41,15 @@ class Map1:
     pipe2 = []
     pipe2.append(1200)
 
+
+
+
     randomboxC = []
     randomboxC.append(374)
-    randomboxC.append(442)
+    randomboxC.append(238)
 
     randomboxI = []
-    randomboxI.append(238)
+    randomboxI.append(442)
 
     coin = []
     for i in range(340, 544, 68):

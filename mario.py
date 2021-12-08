@@ -26,6 +26,7 @@ MAXSPEED = 5
 MAXHEIGHT = 250 # 점프높이
 frameS = 0
 
+EEE = None
 
 RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, DASH_TIMER, A_DOWN, D_DOWN, CROUCH_DOWN, CROUCH_UP, DEAD, FIRE = range(11)
 
@@ -119,10 +120,13 @@ class IdleState:
 
 class RunState:
     def enter(mario, event):
+        global EEE
         if event == RIGHT_DOWN:
+            EEE = RIGHT_DOWN
             mario.velocity += RUN_SPEED_PPS
             mario.dir = 1
         elif event == LEFT_DOWN:
+            EEE = LEFT_DOWN
             mario.velocity -= RUN_SPEED_PPS
             mario.dir = -1
         elif event == RIGHT_UP:
@@ -142,8 +146,9 @@ class RunState:
         pass
 
     def do(mario):
+        global EEE
         mario.frame = (mario.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
-        mario.x += mario.velocity * game_framework.frame_time
+        mario.x += mario.velocity * game_framework.frame_time * mario.xstop
         # mario.x = clamp(25, mario.x, 500)
         if mario.isJump == True:
             if mario.jumpSpeed > JUMP_MIN_SPEED:
@@ -162,6 +167,22 @@ class RunState:
                 mario.y -= mario.jumpSpeed * game_framework.frame_time
             if int(mario.y) <= basicY:
                 mario.isDescend = False
+
+        for i in game_world.all_objects2(2):
+            if mario.collide(i):
+                if mario.y < i.y -15:
+                    if mario.x >= i.x:
+                        if EEE == LEFT_DOWN:
+                            mario.isXstop = True
+                        if EEE == RIGHT_DOWN:
+                            mario.isXstop = False
+                    elif mario.x <= i.x:
+                        if EEE == RIGHT_DOWN:
+                            mario.isXstop = True
+                        if EEE == LEFT_DOWN:
+                            mario.isXstop = False
+                    else:
+                        mario.isXstop = False
 
         pass
 
@@ -288,6 +309,9 @@ class Mario: #
         self.ma2 = False
         self.descendSpeed = JUMP_MIN_SPEED
 
+        self.isXstop = False
+        self.xstop = 1
+
         self.life = 1
 
         self.event_que = []
@@ -314,7 +338,7 @@ class Mario: #
         return self.y
 
     def get_bb(self):
-        return self.x - 11 - self.fixX, self.y - 20, self.x + 11 - self.fixX, self.y + 20
+        return self.x - 15 - self.fixX, self.y - 20, self.x + 15 - self.fixX, self.y + 20
 
     def update(self):
         self.cur_state.do(self)
@@ -325,6 +349,12 @@ class Mario: #
             self.cur_state.enter(self, event)
 
         # self.y -= self.descSpeed * game_framework.frame_time
+
+
+        if self.isXstop:
+            self.xstop = 0
+        else:
+            self.xstop = 1
 
 
     def draw(self):
@@ -340,6 +370,7 @@ class Mario: #
         self.life -= 1
         if self.life == 0:
             self.add_event(DEAD)
+            self.S_d.play()
 
     def fix(self, xx):
         self.fixX = xx

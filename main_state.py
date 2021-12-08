@@ -116,17 +116,17 @@ def enter():
     coins = [Coin(map1.Map1.coin[i]) for i in range(3)]
     game_world.add_objects(coins, 2)
 
-    global item2
-    item2 = Item2()
-    game_world.add_object(item2, 2)
+    # global item2
+    # item2 = Item2()
+    # game_world.add_object(item2, 2)
 
     global m
     m = M()
-    game_world.add_object(m, 2)
+    game_world.add_object(m, 3)
 
     global goombas
     goombas = [Mgoomba(map1.Map1.goomba[i]) for i in range(3)]
-    game_world.add_objects(goombas, 2)
+    game_world.add_objects(goombas, 3)
 
     global timer
     timer = Timer()
@@ -225,6 +225,7 @@ def update():
                 player.y -= 20
                 player.isJump = False
                 player.isDescend = True
+                r.isBreak = True
 
     for b in blocks:
         if collide(player, b):
@@ -236,33 +237,63 @@ def update():
                 player.isJump = False
                 player.isDescend = True
 
+    for p in pipes1:
+        if collide(player, p):
+            if player.y >= p.y:
+                player.y = p.y + 55
+                player.curY = player.y
+                player.isXstop = False
+            # elif (player.x - 17 >= p.x + 37 or player.x + 17 <= p.x + 37) and player.y < p.y:
+            #     player.isXstop = True
+            # else:
+            #     player.isXtop = False
+    for p in pipes2:
+        if collide(player, p):
+            if player.y >= p.y:
+                player.y = p.y + 90
+                player.curY = player.y
+                player.isXstop = False
 
-    if collide(player, item2):
-        player.ma2 = True
-        score.sco += 500
-        item2.remove()
-        game_world.remove_object(item2)
+
+    for i in game_world.all_objects2(4):
+        if collide(player, i):
+            player.ma2 = True
+            score.sco += 500
+            i.remove()
+            game_world.remove_object(i)
 
 
     for coin in coins:
         if collide(player, coin):
             score.coin += 1
             score.sco += 100
-            coins.remove(coin)
+            coin.remove()
             game_world.remove_object(coin)
 
     # 몬스터와 충돌체크
 
     for goomba in goombas:
-        if Mcollide(player, goomba):
-            if isKill == True:
+        if collide(player, goomba):
+            if player.y-17 >= goomba.y+17:
+                player.y += 15
                 score.sco += 200
+                goomba.isDead = True
                 goombas.remove(goomba)
                 game_world.remove_object(goomba)
-                isKill = False
-            elif isDead == True:
+                goomba.remove()
+            else:
                 player.loseLife()
                 timer.stop()
+
+
+            # if isKill == True:
+            #     score.sco += 200
+            #     goombas.remove(goomba)
+            #     game_world.remove_object(goomba)
+            #     isKill = False
+            # elif isDead == True:
+            #     player.loseLife()
+            #     timer.stop()
 
 
     if Mcollide(player, m):

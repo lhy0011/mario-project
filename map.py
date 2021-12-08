@@ -1,5 +1,7 @@
 from pico2d import *
 import random
+
+import game_world
 import mario
 import map1
 import game_framework
@@ -236,6 +238,9 @@ class RandBoxI:
         self.fixX = 0
         self.frame = 0
         self.isBreak = False
+        self.isItem = False
+        self.count = 1
+        self.S_bs = load_music('sound/brick_smash.ogg')
 
     def draw(self):
         if self.isBreak == False:
@@ -248,6 +253,15 @@ class RandBoxI:
 
     def update(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        if self.isBreak == True:
+            if self.count == 1:
+                self.S_bs.play()
+            self.count -= 1
+            if self.isItem == False:
+                self.isItem = True
+                i2 = Item2(self.x, self.y + 34)
+                game_world.add_object(i2, 4)
+
         pass
 
     def fix(self, xx):
@@ -265,7 +279,7 @@ class Coin:
         self.frame = 0
         self.x, self.y = x, 238
         self.fixX = 0
-        self.S_b = load_music('sound/coin.ogg') #아직 재생X
+        self.S_c = load_music('sound/coin.ogg') #아직 재생X
 
 
     def draw(self):
@@ -284,6 +298,10 @@ class Coin:
 
     def get_bb(self):
         return self.x - 15 - self.fixX, self.y - 17, self.x + 15 - self.fixX, self.y + 17
+
+    def remove(self):
+        self.S_c.play()
+        self.x, self.y = -500, -500
 
 
 class Item1:
@@ -313,11 +331,12 @@ class Item1:
 class Item2:
     image = None
 
-    def __init__(self):
+    def __init__(self, x, y):
         Item2.image = load_image('resource/item2.png')
         self.frame = 0
-        self.x, self.y = 700, 83
+        self.x, self.y = x, y
         self.fixX = 0
+        self.S_i = load_music('sound/powerup.ogg')
 
     def draw(self):
         Item2.image.clip_draw(int(self.frame) * 16, 0, 16, 16, self.x - self.fixX, self.y, 34, 34)
@@ -335,6 +354,7 @@ class Item2:
         return self.x - 17 - self.fixX, self.y - 17, self.x + 17 - self.fixX, self.y + 17
 
     def remove(self):
+        self.S_i.play()
         self.x = -500
         self.y = -500
 
