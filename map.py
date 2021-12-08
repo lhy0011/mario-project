@@ -21,9 +21,9 @@ basicY = 83
 
 class Ground: # 34x34
     image = None
-    def __init__(self):
+    def __init__(self, x = 0):
         Ground.image = load_image('resource/tile_set.png')
-        self.x = 0
+        self.x = x
         self.y = 51
         self.fixX = 0
 
@@ -38,16 +38,16 @@ class Ground: # 34x34
 
         groundX = 51
         groundY = 51
-
-        for i in range(len(map1.Map1.ground)):
-            self.x = map1.Map1.ground[i]
-            # Ground.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, map1.Map1.ground[i] - self.fixX, groundY)
-            # Ground.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, map1.Map1.ground[i] - self.fixX, groundY-SIZES)
-            # print(map1.Map1.ground[i])
-
-            Ground.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, groundY)
-            Ground.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, groundY - SIZES)
-            # draw_rectangle(*self.get_bb())
+        #
+        # for i in range(len(map1.Map1.ground)):
+        #     self.x = map1.Map1.ground[i]
+        #     # Ground.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, map1.Map1.ground[i] - self.fixX, groundY)
+        #     # Ground.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, map1.Map1.ground[i] - self.fixX, groundY-SIZES)
+        #     # print(map1.Map1.ground[i])
+        #
+        #     Ground.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, groundY)
+        #     Ground.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, groundY - SIZES)
+        #     # draw_rectangle(*self.get_bb())
 
         pass
 
@@ -65,7 +65,7 @@ class Ground: # 34x34
 class Grounds: # 34x34
     image = None
     def __init__(self, x):
-        Ground.image = load_image('resource/tile_set.png')
+        Grounds.image = load_image('resource/tile_set.png')
         self.x = x
         self.y = 51
         self.fixX = 0
@@ -83,6 +83,9 @@ class Grounds: # 34x34
         groundY = 51
         # for i in range(len(map1.Map1.ground)):
         #     draw_rectangle(*self.get_bb())
+
+        Grounds.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, groundY)
+        Grounds.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, groundY - SIZES)
 
         pass
 

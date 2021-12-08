@@ -14,9 +14,9 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
-JUMP_MAX_SPEED = 1000
-JUMP_MIN_SPEED = 200
-JUMP_GRAVITY = 100
+JUMP_MAX_SPEED = 500
+JUMP_MIN_SPEED = 100
+JUMP_GRAVITY = 10
 
 basicY = 83
 MAXSPEED = 5
@@ -70,7 +70,7 @@ class IdleState:
         if mario.isJump == True:
             if mario.jumpSpeed > JUMP_MIN_SPEED:
                 mario.y += mario.jumpSpeed * game_framework.frame_time
-                mario.jumpSpeed -= JUMP_GRAVITY
+                mario.jumpSpeed -= JUMP_GRAVITY * game_framework.frame_time
             else:
                 mario.y += mario.jumpSpeed * game_framework.frame_time
         if mario.y > (basicY + MAXHEIGHT):
@@ -79,11 +79,14 @@ class IdleState:
         if mario.isJump == False and mario.isDescend == True:
             if mario.jumpSpeed < JUMP_MAX_SPEED:
                 mario.y -= mario.jumpSpeed * game_framework.frame_time
-                mario.jumpSpeed += JUMP_GRAVITY
+                mario.jumpSpeed += JUMP_GRAVITY * game_framework.frame_time
             else:
                 mario.y -= mario.jumpSpeed * game_framework.frame_time
             if int(mario.y) <= basicY:
                 mario.isDescend = False
+
+        # if mario.y > basicY+2:
+        #     mario.y -= mario.jumpSpeed * game_framework.frame_time
         pass
 
     def draw(mario):
@@ -140,19 +143,19 @@ class RunState:
         # mario.x = clamp(25, mario.x, 500)
         if mario.isJump == True:
             if mario.jumpSpeed > JUMP_MIN_SPEED:
-                mario.y += mario.jumpSpeed
-                mario.jumpSpeed -= JUMP_GRAVITY
+                mario.y += mario.jumpSpeed * game_framework.frame_time
+                mario.jumpSpeed -= JUMP_GRAVITY * game_framework.frame_time
             else:
-                mario.y += mario.jumpSpeed
+                mario.y += mario.jumpSpeed * game_framework.frame_time
         if mario.y > (basicY + MAXHEIGHT):
             mario.isDescend = True
             mario.isJump = False
         if mario.isJump == False and mario.isDescend == True:
             if mario.jumpSpeed < JUMP_MAX_SPEED:
-                mario.y -= mario.jumpSpeed
-                mario.jumpSpeed += JUMP_GRAVITY
+                mario.y -= mario.jumpSpeed * game_framework.frame_time
+                mario.jumpSpeed += JUMP_GRAVITY * game_framework.frame_time
             else:
-                mario.y -= mario.jumpSpeed
+                mario.y -= mario.jumpSpeed * game_framework.frame_time
             if int(mario.y) <= basicY:
                 mario.isDescend = False
 
@@ -265,8 +268,9 @@ class Mario: #
         self.dir = 1
         self.speedX = 0.0
         self.speedY = 5
-        self.x = 200
-        self.y = 400
+        self.x = 0
+        # self.y = basicY+2
+        self.y = 4000
         self.font = load_font('ENCR10B.TTF', 16)
         self.curY = 0
 
@@ -309,9 +313,6 @@ class Mario: #
             self.cur_state.exit(self, event)
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
-
-        if self.colground == False:
-            self.y -= self.jumpSpeed * game_framework.frame_time
 
     def draw(self):
         self.cur_state.draw(self)

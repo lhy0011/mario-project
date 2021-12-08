@@ -82,16 +82,16 @@ def enter():
     bg = BG()
     game_world.add_object(bg, 0)
 
-    global ground
-    ground = Ground()
-    game_world.add_object(ground, 1)
+    # global ground
+    # ground = Ground()
+    # game_world.add_object(ground, 1)
 
     global grounds
     grounds = [Grounds(map1.Map1.ground[i]) for i in range(len(map1.Map1.ground))]
     game_world.add_objects(grounds, 1)
 
     # global grounds
-    # grounds = [Ground(map1.Map1.ground[i]) for i in range(135)]
+    # grounds = [map1.Map1.ground[i] for i in range(len(map1.Map1.ground))]
     # game_world.add_object(grounds, 2)
 
     global cloud
