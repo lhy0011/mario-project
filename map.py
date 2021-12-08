@@ -123,25 +123,40 @@ class Block:
 
 class RandBoxC:
     image = None
+    imageC = None
     def __init__(self, x):
-        Block.image = load_image('resource/tile_set.png')
+        RandBoxC.image = load_image('resource/tile_set.png')
+        RandBoxC.imageC = load_image('resource/coin.png')
         self.x = x
         self.y = 204
+        self.cy = 204
         self.fixX = 0
         self.frame = 0
         self.isBreak = False
+        self.isSound = False
+        self.count = 12
+        self.S_b = load_music('sound/coin.ogg')
 
     def draw(self):
         if self.isBreak == False:
-            Block.image.clip_draw(800 + SIZES * int(self.frame)-1, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
+            RandBoxC.image.clip_draw(800 + SIZES * int(self.frame)-1, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
             draw_rectangle(*self.get_bb())
         else:
-            Block.image.clip_draw(900, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
+            RandBoxC.image.clip_draw(900, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
             draw_rectangle(*self.get_bb())
+            if (self.count <= 12 and self.count > 8) or (self.count <= 4 and self.count > 0):
+                RandBoxC.imageC.clip_draw(16, 0, 16, 16, self.x - self.fixX, self.y + 34, 34, 34)
+                self.count -= 1
+            elif self.count <= 8 and self.count > 4:
+                RandBoxC.imageC.clip_draw(16, 0, 16, 16, self.x - self.fixX, self.y + 34 + 5, 34, 34)
+                self.count -= 1
+
         pass
 
     def update(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        if self.count == 11:
+            self.S_b.play()
         pass
 
     def fix(self, xx):
@@ -188,6 +203,8 @@ class Coin:
         self.frame = 0
         self.x, self.y = x, 238
         self.fixX = 0
+        self.S_b = load_music('sound/coin.ogg') #아직 재생X
+
 
     def draw(self):
         for i in range(len(map1.Map1.coin)):

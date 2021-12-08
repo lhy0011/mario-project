@@ -12,7 +12,7 @@ import sound
 from timer import Timer
 from mario import Mario, IdleState
 from monster import M, Mgoomba
-from map import BG, Block, Grounds, Coin, Cloud, Item2, RandBox
+from map import BG, Block, Grounds, Coin, Cloud, Item2, RandBoxC, RandBoxI
 from score import Score
 
 name = "MainState"
@@ -140,9 +140,13 @@ def enter():
     blocks = [Block(map1.Map1.block[i]) for i in range(len(map1.Map1.block))]
     game_world.add_objects(blocks, 2)
 
-    global rboxs
-    rboxs = [RandBox(map1.Map1.randombox[i]) for i in range (len(map1.Map1.randombox))]
-    game_world.add_objects(rboxs, 2)
+    global rboxsC
+    rboxsC = [RandBoxC(map1.Map1.randomboxC[i]) for i in range (len(map1.Map1.randomboxC))]
+    game_world.add_objects(rboxsC, 2)
+
+    global rboxsI
+    rboxsI = [RandBoxI(map1.Map1.randomboxI[i]) for i in range (len(map1.Map1.randomboxI))]
+    game_world.add_objects(rboxsI, 2)
 
 
 
@@ -199,7 +203,17 @@ def update():
                 player.isDescend = True
 
 
-    for r in rboxs:
+    for rc in rboxsC:
+        if collide(player, rc):
+            if player.y >= rc.y:
+                player.y = rc.y + 35
+                player.curY = player.y
+            elif player.y <= rc.y + 5:
+                player.y -= 20
+                player.isJump = False
+                player.isDescend = True
+                rc.isBreak = True
+    for r in rboxsI:
         if collide(player, r):
             if player.y >= r.y:
                 player.y = r.y + 35
