@@ -314,7 +314,7 @@ class Mario: #
         return self.y
 
     def get_bb(self):
-        return self.x - 15 - self.fixX, self.y - 20, self.x + 15 - self.fixX, self.y + 20
+        return self.x - 11 - self.fixX, self.y - 20, self.x + 11 - self.fixX, self.y + 20
 
     def update(self):
         self.cur_state.do(self)

@@ -61,7 +61,6 @@ class Ground: # 34x34
         return self.x - 17 - self.fixX, self.y - 17, self.x + 17 - self.fixX, self.y + 17
 
 
-
 class Grounds: # 34x34
     image = None
     def __init__(self, x):
@@ -78,11 +77,8 @@ class Grounds: # 34x34
         global MAX_X
         global MAX_Y
 
-
         groundX = 51
         groundY = 51
-        # for i in range(len(map1.Map1.ground)):
-        #     draw_rectangle(*self.get_bb())
 
         Grounds.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, groundY)
         Grounds.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, groundY - SIZES)
@@ -108,6 +104,50 @@ class Block:
 
     def draw(self):
         Block.image.clip_draw(SIZES, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
+        draw_rectangle(*self.get_bb())
+        pass
+
+    def update(self):
+        pass
+
+    def fix(self, xx):
+        self.fixX = xx
+
+    def get_bb(self):
+        return self.x - 17 - self.fixX, self.y - 17, self.x + 17 - self.fixX, self.y + 17
+
+class Block2:
+    image = None
+    def __init__(self, x):
+        Block2.image = load_image('resource/tile_set.png')
+        self.x = x
+        self.y = 204
+        self.fixX = 0
+
+    def draw(self):
+        Block.image.clip_draw(0, MAXHEIGHT - SIZES * 2, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
+        draw_rectangle(*self.get_bb())
+        pass
+
+    def update(self):
+        pass
+
+    def fix(self, xx):
+        self.fixX = xx
+
+    def get_bb(self):
+        return self.x - 17 - self.fixX, self.y - 17, self.x + 17 - self.fixX, self.y + 17
+
+class Pipe1:
+    image = None
+    def __init__(self, x, y):
+        Block2.image = load_image('resource/tile_set.png')
+        self.x = x
+        self.y = y
+        self.fixX = 0
+
+    def draw(self):
+        Block.image.clip_draw(0, MAXHEIGHT - SIZES * 10, SIZEB, SIZES, self.x - self.fixX, self.y, 68, 34)
         draw_rectangle(*self.get_bb())
         pass
 

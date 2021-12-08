@@ -213,6 +213,8 @@ def update():
                 player.isJump = False
                 player.isDescend = True
                 rc.isBreak = True
+                score.sco += 100
+                score.coin += 1
     for r in rboxsI:
         if collide(player, r):
             if player.y >= r.y:

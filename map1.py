@@ -22,6 +22,13 @@ class Map1:
     for i in range(340,510,68):
         block.append(i)
 
+    block2 = []
+    # for i in range()
+
+    pipe1 = []
+
+    pipe2 = []
+
     randomboxC = []
     randomboxC.append(374)
     randomboxC.append(442)
