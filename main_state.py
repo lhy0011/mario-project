@@ -12,7 +12,7 @@ import sound
 from timer import Timer
 from mario import Mario
 from monster import M, Mgoomba
-from map import BG, Ground, Coin, Cloud, Item2
+from map import BG, Ground, Grounds, Coin, Cloud, Item2
 from score import Score
 
 name = "MainState"
@@ -23,6 +23,7 @@ x = 0
 
 bg = None
 ground = None
+grounds =[]
 cloud = None
 
 coins = []
@@ -84,6 +85,14 @@ def enter():
     global ground
     ground = Ground()
     game_world.add_object(ground, 1)
+
+    global grounds
+    grounds = [Grounds(map1.Map1.ground[i]) for i in range(len(map1.Map1.ground))]
+    game_world.add_objects(grounds, 1)
+
+    # global grounds
+    # grounds = [Ground(map1.Map1.ground[i]) for i in range(135)]
+    # game_world.add_object(grounds, 2)
 
     global cloud
     cloud = Cloud()
@@ -155,6 +164,12 @@ def update():
         x = xx - 500
     for game_object in game_world.all_objects():
         game_object.fix(x)
+
+    for g in grounds:
+        if collide(player, g):
+            player.colground = True
+        else:
+            player.colground = False
 
 
     if collide(player, item2):

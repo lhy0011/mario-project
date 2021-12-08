@@ -47,7 +47,42 @@ class Ground: # 34x34
 
             Ground.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, groundY)
             Ground.image.clip_draw(0, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, groundY - SIZES)
-            draw_rectangle(*self.get_bb())
+            # draw_rectangle(*self.get_bb())
+
+        pass
+
+    def update(self):
+        pass
+
+    def fix(self, xx):
+        self.fixX = xx
+
+    def get_bb(self):
+        return self.x - 17 - self.fixX, self.y - 17, self.x + 17 - self.fixX, self.y + 17
+
+
+
+class Grounds: # 34x34
+    image = None
+    def __init__(self, x):
+        Ground.image = load_image('resource/tile_set.png')
+        self.x = x
+        self.y = 51
+        self.fixX = 0
+
+    def draw(self):
+        global SIZES
+        global SIZEB
+        global MAXHEIGHT
+        global MAXWIDTH
+        global MAX_X
+        global MAX_Y
+
+
+        groundX = 51
+        groundY = 51
+        # for i in range(len(map1.Map1.ground)):
+        #     draw_rectangle(*self.get_bb())
 
         pass
 

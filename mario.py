@@ -14,9 +14,9 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
-JUMP_MAX_SPEED = 5
-JUMP_MIN_SPEED = 2
-JUMP_GRAVITY = 0.05
+JUMP_MAX_SPEED = 1000
+JUMP_MIN_SPEED = 200
+JUMP_GRAVITY = 100
 
 basicY = 83
 MAXSPEED = 5
@@ -69,19 +69,19 @@ class IdleState:
     def do(mario):
         if mario.isJump == True:
             if mario.jumpSpeed > JUMP_MIN_SPEED:
-                mario.y += mario.jumpSpeed
+                mario.y += mario.jumpSpeed * game_framework.frame_time
                 mario.jumpSpeed -= JUMP_GRAVITY
             else:
-                mario.y += mario.jumpSpeed
+                mario.y += mario.jumpSpeed * game_framework.frame_time
         if mario.y > (basicY + MAXHEIGHT):
             mario.isDescend = True
             mario.isJump = False
         if mario.isJump == False and mario.isDescend == True:
             if mario.jumpSpeed < JUMP_MAX_SPEED:
-                mario.y -= mario.jumpSpeed
+                mario.y -= mario.jumpSpeed * game_framework.frame_time
                 mario.jumpSpeed += JUMP_GRAVITY
             else:
-                mario.y -= mario.jumpSpeed
+                mario.y -= mario.jumpSpeed * game_framework.frame_time
             if int(mario.y) <= basicY:
                 mario.isDescend = False
         pass
@@ -265,17 +265,19 @@ class Mario: #
         self.dir = 1
         self.speedX = 0.0
         self.speedY = 5
-        self.x = 400
-        self.y = basicY
+        self.x = 200
+        self.y = 400
         self.font = load_font('ENCR10B.TTF', 16)
         self.curY = 0
 
+        self.colground = False
+
         self.isJump = False
         self.jumpSpeed= JUMP_MAX_SPEED
-        self.jumpTimer = 0
         self.isDescend = False
         self.isdeadM = False
         self.ma2 = False
+        self.descendSpeed = JUMP_MIN_SPEED
 
         self.life = 1
 
@@ -307,6 +309,9 @@ class Mario: #
             self.cur_state.exit(self, event)
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
+
+        if self.colground == False:
+            self.y -= self.jumpSpeed * game_framework.frame_time
 
     def draw(self):
         self.cur_state.draw(self)

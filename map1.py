@@ -26,3 +26,6 @@ class Map1:
     ## 몬스터
     goomba = [100, 750, 2500]
     m = [400]
+
+    def update(self):
+        pass
