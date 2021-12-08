@@ -147,7 +147,7 @@ class Pipe1:
         self.fixX = 0
 
     def draw(self):
-        Block.image.draw(self.x - self.fixX, self.y, 68, 68)
+        Pipe1.image.draw(self.x - self.fixX, self.y, 68, 68)
         draw_rectangle(*self.get_bb())
         pass
 
@@ -159,6 +159,28 @@ class Pipe1:
 
     def get_bb(self):
         return self.x - 34 - self.fixX, self.y - 34, self.x + 34 - self.fixX, self.y + 34
+
+class Pipe2:
+    image = None
+    def __init__(self, x):
+        Pipe2.image = load_image('resource/pipe2.png')
+        self.x = x
+        self.y = 204
+        self.fixX = 0
+
+    def draw(self):
+        Pipe1.image.draw(self.x - self.fixX, self.y, 68, 136)
+        draw_rectangle(*self.get_bb())
+        pass
+
+    def update(self):
+        pass
+
+    def fix(self, xx):
+        self.fixX = xx
+
+    def get_bb(self):
+        return self.x - 34 - self.fixX, self.y - 68, self.x + 34 - self.fixX, self.y + 68
 
 
 class RandBoxC:

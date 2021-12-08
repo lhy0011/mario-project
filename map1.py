@@ -34,13 +34,11 @@ class Map1:
     #     pipe1.append((1050, 102 + 34*i))
     # for i in range(2):
     #     pipe1.append((1150, 102 + 34*i))
-    for i in range(900, 1501, 450):
-        pipe1.append(i)
+    pipe1.append(900)
+    pipe1.append(1500)
 
-    # pipe2 = []
-    # pipe2.append(950, 102 + 34 * 2)
-    # pipe2.append(1050, 102 + 34 * 3)
-    # pipe2.append(1150, 102 + 34 * 2)
+    pipe2 = []
+    pipe2.append(1200)
 
     randomboxC = []
     randomboxC.append(374)

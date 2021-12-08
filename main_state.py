@@ -12,7 +12,7 @@ import sound
 from timer import Timer
 from mario import Mario, IdleState
 from monster import M, Mgoomba
-from map import BG, Block, Grounds, Coin, Cloud, Item2, RandBoxC, RandBoxI, Pipe1
+from map import BG, Block, Grounds, Coin, Cloud, Item2, RandBoxC, RandBoxI, Pipe1, Pipe2
 from score import Score
 
 name = "MainState"
@@ -147,6 +147,10 @@ def enter():
     global pipes1
     pipes1 = [Pipe1(map1.Map1.pipe1[i]) for i in range(len(map1.Map1.pipe1))]
     game_world.add_objects(pipes1, 2)
+
+    global pipes2
+    pipes2 = [Pipe2(map1.Map1.pipe2[i]) for i in range(len(map1.Map1.pipe2))]
+    game_world.add_objects(pipes2, 2)
 
     global rboxsC
     rboxsC = [RandBoxC(map1.Map1.randomboxC[i]) for i in range (len(map1.Map1.randomboxC))]
