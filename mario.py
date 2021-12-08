@@ -1,6 +1,9 @@
 import game_framework
 from pico2d import *
+
+import main_state
 from fireball import fireBall
+import sound
 
 import game_world
 import gameover_state
@@ -60,6 +63,7 @@ class IdleState:
             mario.isJump = True
             mario.jumpSpeed = JUMP_MAX_SPEED
             mario.curY = mario.y
+            mario.S_j.play()
 
         if event == D_DOWN:
             if mario.ma2:
@@ -132,6 +136,7 @@ class RunState:
             mario.isJump = True
             mario.jumpSpeed = JUMP_MAX_SPEED
             mario.curY = mario.y
+            mario.S_j.play()
         if event == D_DOWN:
             if mario.ma2:
                 mario.fireball()
@@ -270,7 +275,7 @@ class Mario: #
         self.speedY = 5
         self.x = 0
         # self.y = basicY+2
-        self.y = 4000
+        self.y = 2000
         self.font = load_font('ENCR10B.TTF', 16)
         self.curY = 0
 
@@ -290,12 +295,17 @@ class Mario: #
         self.cur_state.enter(self, None)
         self.fixX = 0
 
+        self.S_j = load_music('sound/small_jump.ogg')
+        self.S_d = load_wav('sound/death.wav')
+        self.S_f = load_music('sound/fireball.ogg')
+
     def add_event(self, event):
         self.event_que.insert(0, event)
 
     def fireball(self):
         ball = fireBall(self.x - self.fixX, self.y, self.dir)
         game_world.add_object(ball, 1)
+        self.S_f.play()
 
     def get_MX(self):
         return self.x
@@ -314,6 +324,10 @@ class Mario: #
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
 
+        for g in main_state.grounds:
+            if self.collide(g) is not True:
+                self.y
+
     def draw(self):
         self.cur_state.draw(self)
         draw_rectangle(*self.get_bb())
@@ -330,6 +344,16 @@ class Mario: #
 
     def fix(self, xx):
         self.fixX = xx
+
+    def collide(self, b):
+        left_a, bottom_a, right_a, top_a = self.get_bb()
+        left_b, bottom_b, right_b, top_b = b.get_bb()
+
+        if left_a > right_b: return False
+        if right_a < left_b: return False
+        if top_a < bottom_b: return False
+        if bottom_a > top_b: return False
+        return True
 
     def gameover(self):
 

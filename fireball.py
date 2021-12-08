@@ -2,7 +2,9 @@ import random
 from pico2d import *
 import game_world
 import game_framework
-# import main_state
+import main_state
+import score
+
 
 PIXEL_PER_METER = (10.0 / 0.3)
 BALL_SPEED_KMPH = 100.0
@@ -21,6 +23,9 @@ class fireBall:
             self.x = x + 20
         self.speed = BALL_SPEED_PPS
         self.fixX = 0
+
+        # self.S_s = load_music('sound/stomp.ogg')
+
 
     def get_bb(self):
         # fill here
@@ -43,8 +48,26 @@ class fireBall:
         if self.x < 25 or self.x > 1000 - 25:
             game_world.remove_object(self)
 
+        for g in main_state.goombas:
+            if self.collide(g):
+                main_state.goombas.remove(g)
+                game_world.remove_object(g)
+                # self.S_s.play()
+                main_state.score.sco += 200
+
+
     def stop(self):
         self.speed = 0
 
     def fix(self, xx):
         self.fixX = xx
+
+    def collide(self, b):
+        left_a, bottom_a, right_a, top_a = self.get_bb()
+        left_b, bottom_b, right_b, top_b = b.get_bb()
+
+        if left_a > right_b: return False
+        if right_a < left_b: return False
+        if top_a < bottom_b: return False
+        if bottom_a > top_b: return False
+        return True
