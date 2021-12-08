@@ -10,9 +10,9 @@ import map1
 
 import sound
 from timer import Timer
-from mario import Mario
+from mario import Mario, IdleState
 from monster import M, Mgoomba
-from map import BG, Ground, Grounds, Coin, Cloud, Item2
+from map import BG, Block, Grounds, Coin, Cloud, Item2, RandBox
 from score import Score
 
 name = "MainState"
@@ -25,6 +25,9 @@ bg = None
 ground = None
 grounds =[]
 cloud = None
+blocks = []
+rboxsC = []
+rboxsI = []
 
 coins = []
 item2 = None
@@ -51,6 +54,11 @@ def collide(a, b):
     if bottom_a > top_b: return False
     return True
 
+def collideB(a, b):
+    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+
+    if bottom_a >= top_b: return True
 
 isDead = None
 isKill = None
@@ -128,7 +136,13 @@ def enter():
     player = Mario()
     game_world.add_object(player, 3)
 
+    global blocks
+    blocks = [Block(map1.Map1.block[i]) for i in range(len(map1.Map1.block))]
+    game_world.add_objects(blocks, 2)
 
+    global rboxs
+    rboxs = [RandBox(map1.Map1.randombox[i]) for i in range (len(map1.Map1.randombox))]
+    game_world.add_objects(rboxs, 2)
 
 
 
@@ -169,9 +183,31 @@ def update():
 
     for g in grounds:
         if collide(player, g):
-            player.colground = True
-        else:
-            player.colground = False
+            if player.y >= g.y:
+                player.y = g.y + 34
+                player.curY = player.y
+
+
+    for b in blocks:
+        if collide(player, b):
+            if player.y >= b.y:
+                player.y = b.y + 35
+                player.curY = player.y
+            elif player.y <= b.y + 5:
+                player.y -= 20
+                player.isJump = False
+                player.isDescend = True
+
+
+    for r in rboxs:
+        if collide(player, r):
+            if player.y >= r.y:
+                player.y = r.y + 35
+                player.curY = player.y
+            elif player.y <= r.y + 5:
+                player.y -= 20
+                player.isJump = False
+                player.isDescend = True
 
 
     if collide(player, item2):

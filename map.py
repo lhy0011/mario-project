@@ -100,13 +100,15 @@ class Grounds: # 34x34
 
 class Block:
     image = None
-    def __init__(self):
+    def __init__(self, x):
         Block.image = load_image('resource/tile_set.png')
-        self.x = 0
-        self.y = 0
+        self.x = x
+        self.y = 204
         self.fixX = 0
 
     def draw(self):
+        Block.image.clip_draw(SIZES, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
+        draw_rectangle(*self.get_bb())
         pass
 
     def update(self):
@@ -115,7 +117,67 @@ class Block:
     def fix(self, xx):
         self.fixX = xx
 
+    def get_bb(self):
+        return self.x - 17 - self.fixX, self.y - 17, self.x + 17 - self.fixX, self.y + 17
 
+
+class RandBoxC:
+    image = None
+    def __init__(self, x):
+        Block.image = load_image('resource/tile_set.png')
+        self.x = x
+        self.y = 204
+        self.fixX = 0
+        self.frame = 0
+        self.isBreak = False
+
+    def draw(self):
+        if self.isBreak == False:
+            Block.image.clip_draw(800 + SIZES * int(self.frame)-1, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
+            draw_rectangle(*self.get_bb())
+        else:
+            Block.image.clip_draw(900, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
+            draw_rectangle(*self.get_bb())
+        pass
+
+    def update(self):
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        pass
+
+    def fix(self, xx):
+        self.fixX = xx
+
+    def get_bb(self):
+        return self.x - 17 - self.fixX, self.y - 17, self.x + 17 - self.fixX, self.y + 17
+
+class RandBoxI:
+    image = None
+    def __init__(self, x):
+        Block.image = load_image('resource/tile_set.png')
+        self.x = x
+        self.y = 204
+        self.fixX = 0
+        self.frame = 0
+        self.isBreak = False
+
+    def draw(self):
+        if self.isBreak == False:
+            Block.image.clip_draw(800 + SIZES * int(self.frame)-1, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
+            draw_rectangle(*self.get_bb())
+        else:
+            Block.image.clip_draw(900, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
+            draw_rectangle(*self.get_bb())
+        pass
+
+    def update(self):
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        pass
+
+    def fix(self, xx):
+        self.fixX = xx
+
+    def get_bb(self):
+        return self.x - 17 - self.fixX, self.y - 17, self.x + 17 - self.fixX, self.y + 17
 
 ###### 아이템  16x16
 

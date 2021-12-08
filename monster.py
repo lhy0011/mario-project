@@ -85,10 +85,10 @@ class M:
 
         if self.x > mx:
             if self.x - mx < 300:
-                self.x -= 0.5
+                self.x -= 1
         elif self.x < mx:
             if mx - self.x < 300:
-                self.x += 0.5
+                self.x += 1
 
     def draw(self):
         global EMAXHEIGHT

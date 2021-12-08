@@ -19,7 +19,15 @@ class Map1:
 
 
     block = []
-    # for i in range
+    for i in range(340,510,68):
+        block.append(i)
+
+    randomboxC = []
+    randomboxC.append(374)
+    randomboxC.append(442)
+
+    randomboxI = []
+    randomboxI.append(238)
 
     coin = []
     for i in range(340, 544, 68):

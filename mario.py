@@ -62,8 +62,8 @@ class IdleState:
         if event == A_DOWN:
             mario.isJump = True
             mario.jumpSpeed = JUMP_MAX_SPEED
-            mario.curY = mario.y
             mario.S_j.play()
+            mario.descSpeed = 0
 
         if event == D_DOWN:
             if mario.ma2:
@@ -77,7 +77,7 @@ class IdleState:
                 mario.jumpSpeed -= JUMP_GRAVITY * game_framework.frame_time
             else:
                 mario.y += mario.jumpSpeed * game_framework.frame_time
-        if mario.y > (basicY + MAXHEIGHT):
+        if mario.y > (mario.curY + MAXHEIGHT):
             mario.isDescend = True
             mario.isJump = False
         if mario.isJump == False and mario.isDescend == True:
@@ -135,7 +135,6 @@ class RunState:
         if event == A_DOWN:
             mario.isJump = True
             mario.jumpSpeed = JUMP_MAX_SPEED
-            mario.curY = mario.y
             mario.S_j.play()
         if event == D_DOWN:
             if mario.ma2:
@@ -152,7 +151,7 @@ class RunState:
                 mario.jumpSpeed -= JUMP_GRAVITY * game_framework.frame_time
             else:
                 mario.y += mario.jumpSpeed * game_framework.frame_time
-        if mario.y > (basicY + MAXHEIGHT):
+        if mario.y > (mario.curY + MAXHEIGHT):
             mario.isDescend = True
             mario.isJump = False
         if mario.isJump == False and mario.isDescend == True:
@@ -273,11 +272,12 @@ class Mario: #
         self.dir = 1
         self.speedX = 0.0
         self.speedY = 5
-        self.x = 0
-        # self.y = basicY+2
+        self.x = 150
         self.y = 2000
         self.font = load_font('ENCR10B.TTF', 16)
         self.curY = 0
+
+        self.descSpeed = 0
 
         self.colground = False
 
@@ -324,9 +324,8 @@ class Mario: #
             self.cur_state = next_state_table[self.cur_state][event]
             self.cur_state.enter(self, event)
 
-        for g in main_state.grounds:
-            if self.collide(g) is not True:
-                self.y
+        # self.y -= self.descSpeed * game_framework.frame_time
+
 
     def draw(self):
         self.cur_state.draw(self)
@@ -354,6 +353,16 @@ class Mario: #
         if top_a < bottom_b: return False
         if bottom_a > top_b: return False
         return True
+
+    def colBlock(self, b):
+        left_a, bottom_a, right_a, top_a = self.get_bb()
+        left_b, bottom_b, right_b, top_b = b.get_bb()
+
+        if bottom_a == top_b: return True
+        if top_a == bottom_b: return True
+        if left_a == right_b: return True
+        if right_a == left_b: return True
+        return False
 
     def gameover(self):
 
