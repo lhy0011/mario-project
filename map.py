@@ -120,14 +120,14 @@ class Block:
 
 class Block2:
     image = None
-    def __init__(self, x):
+    def __init__(self, x, y = 85):
         Block2.image = load_image('resource/tile_set.png')
         self.x = x
-        self.y = 204
+        self.y = y
         self.fixX = 0
 
     def draw(self):
-        Block.image.clip_draw(0, MAXHEIGHT - SIZES * 2, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
+        Block2.image.clip_draw(0, MAXHEIGHT - SIZES * 2, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
         draw_rectangle(*self.get_bb())
         pass
 

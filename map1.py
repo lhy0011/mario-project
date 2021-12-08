@@ -23,10 +23,35 @@ class Map1:
     block = []
     for i in range(340,510,68):
         block.append(i)
+    # 69 ~ 75
+    block.append(34 * 70)
+    block.append(34 * 71)
+    block.append(34 * 73)
+    block.append(34 * 74)
 
-    block2 = []
-    # block2.append(map.Block2())
-    # for i in range()
+    block2_1 = []
+    block2_1.append(34 * 90)
+    block2_1.append(34 * 91)
+    block2_1.append(34 * 91)
+    block2_1.append(34 * 92)
+    block2_1.append(34 * 92)
+    block2_1.append(34 * 92)
+    block2_1.append(34 * 93)
+    block2_1.append(34 * 93)
+    block2_1.append(34 * 93)
+    block2_1.append(34 * 93)
+
+    block2_1.append(34 * 96)
+    block2_1.append(34 * 96)
+    block2_1.append(34 * 96)
+    block2_1.append(34 * 96)
+    block2_1.append(34 * 97)
+    block2_1.append(34 * 97)
+    block2_1.append(34 * 97)
+    block2_1.append(34 * 98)
+    block2_1.append(34 * 98)
+    block2_1.append(34 * 99)
+    block2_2 = [85, 85, 85 + 34, 85, 85 + 34, 85 + 34 *2, 85, 85 + 34, 85 + 34*2,85 + 34*3,   85, 85 + 34, 85 + 34*2,85 + 34*3,85,85 + 34,85 + 34*2,85,85 + 34,85]
 
     pipe1 = []
     # for i in range(2):
@@ -37,19 +62,22 @@ class Map1:
     #     pipe1.append((1150, 102 + 34*i))
     pipe1.append(900)
     pipe1.append(1500)
+    pipe1.append(2100)
+    pipe1.append(2800)
 
     pipe2 = []
     pipe2.append(1200)
 
 
-
-
     randomboxC = []
     randomboxC.append(374)
     randomboxC.append(238)
+    randomboxC.append(34 * 69)
+    randomboxC.append(34 * 75)
 
     randomboxI = []
     randomboxI.append(442)
+    randomboxI.append(34 * 72)
 
     coin = []
     for i in range(340, 544, 68):
@@ -57,7 +85,7 @@ class Map1:
 
 
     ## 몬스터
-    goomba = [100, 750, 2500]
+    goomba = [100, 750, 2500, 2600]
     m = [400]
 
     def update(self):

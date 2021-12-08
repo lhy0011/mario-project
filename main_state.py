@@ -12,7 +12,7 @@ import sound
 from timer import Timer
 from mario import Mario, IdleState
 from monster import M, Mgoomba
-from map import BG, Block, Grounds, Coin, Cloud, Item2, RandBoxC, RandBoxI, Pipe1, Pipe2
+from map import BG, Block, Grounds, Coin, Cloud, Item2, RandBoxC, RandBoxI, Pipe1, Pipe2, Block2
 from score import Score
 
 name = "MainState"
@@ -26,6 +26,7 @@ ground = None
 grounds = []
 cloud = None
 blocks = []
+blocks2 = []
 
 pipes1 = []
 pipes2 = []
@@ -125,7 +126,7 @@ def enter():
     game_world.add_object(m, 3)
 
     global goombas
-    goombas = [Mgoomba(map1.Map1.goomba[i]) for i in range(3)]
+    goombas = [Mgoomba(map1.Map1.goomba[i]) for i in range(len(map1.Map1.goomba))]
     game_world.add_objects(goombas, 3)
 
     global timer
@@ -143,6 +144,10 @@ def enter():
     global blocks
     blocks = [Block(map1.Map1.block[i]) for i in range(len(map1.Map1.block))]
     game_world.add_objects(blocks, 2)
+
+    global blocks2
+    blocks2 = [Block2(map1.Map1.block2_1[i], map1.Map1.block2_2[i]) for i in range(len(map1.Map1.block2_1))]
+    game_world.add_objects(blocks2, 2)
 
     global pipes1
     pipes1 = [Pipe1(map1.Map1.pipe1[i]) for i in range(len(map1.Map1.pipe1))]
@@ -253,6 +258,12 @@ def update():
                 player.y = p.y + 90
                 player.curY = player.y
                 player.isXstop = False
+
+    for b in blocks2:
+        if collide(player, b):
+            if player.y >= b.y:
+                player.y = b.y + 35
+                player.curY = player.y
 
 
     for i in game_world.all_objects2(4):
