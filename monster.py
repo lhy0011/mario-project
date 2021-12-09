@@ -43,18 +43,6 @@ class Mgoomba: # 32x32
     def update(self):
 
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 2
-        # if self.x < 0:
-        #     self.isTWL = True
-        #     self.isTWR = False
-        # if self.x > 300:
-        #     self.isTWR = True
-        #     self.isTWL = False
-        # if self.isTWL == False:
-        #     self.x -= 0.5
-        # elif self.isTWR == False:
-        #     self.x += 0.5
-        # if self.isDead:
-        #     self.S_d.play()
 
         for i in game_world.all_objects2(2):
             if self.collide(i):
@@ -88,10 +76,10 @@ class Mgoomba: # 32x32
 
 class M:
     image = None
-    def __init__(self):
+    def __init__(self,x):
         M.image = load_image('resource/enemies.png')
         self.frame = 0
-        self.x = 1200
+        self.x = x
         self.y = basicY
         self.fixX = 0
 

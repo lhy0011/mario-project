@@ -104,6 +104,8 @@ class IdleState:
             else:
                 if mario.ma2:
                     mario.mario2.draw(mario.x - mario.fixX, mario.y)
+                elif mario.isMM:
+                    mario.marioD.draw(mario.x - mario.fixX, mario.y)
                 else:
                     mario.marioR.draw(mario.x - mario.fixX, mario.y)
         else:
@@ -115,6 +117,8 @@ class IdleState:
             else:
                 if mario.ma2:
                     mario.mario2.clip_composite_draw(0, 0, 36, 34, 0, 'h', mario.x - mario.fixX, mario.y)
+                elif mario.isMM:
+                    mario.marioD.draw(mario.x - mario.fixX, mario.y)
                 else:
                     mario.marioL.draw(mario.x - mario.fixX, mario.y)
 
@@ -196,6 +200,8 @@ class RunState:
             else:
                 if mario.ma2:
                     mario.mario2R.clip_draw(int(mario.frame) * 36, 0, 36, 34, mario.x - mario.fixX, mario.y)
+                elif mario.isMM:
+                    mario.marioD.draw(mario.x - mario.fixX, mario.y)
                 else:
                     mario.marioRR.clip_draw(int(mario.frame) * 36, 0, 36, 34, mario.x - mario.fixX, mario.y)
         else:
@@ -207,45 +213,10 @@ class RunState:
             else:
                 if mario.ma2:
                     mario.mario2R.clip_composite_draw(int(mario.frame) * 36, 0, 36, 34, 0, 'h', mario.x - mario.fixX, mario.y, 36, 34)
+                elif mario.isMM:
+                    mario.marioD.draw(mario.x - mario.fixX, mario.y)
                 else:
                     mario.marioRL.clip_draw(int(mario.frame) * 36, 0, 36, 34, mario.x - mario.fixX, mario.y)
-
-
-class CrouchState: #수정필요
-    def enter(mario, event):
-        if event == RIGHT_DOWN:
-            mario.velocity += RUN_SPEED_PPS
-            mario.dir = 1
-        elif event == LEFT_DOWN:
-            mario.velocity -= RUN_SPEED_PPS
-            mario.dir = -1
-        elif event == RIGHT_UP:
-            mario.velocity -= RUN_SPEED_PPS
-        elif event == LEFT_UP:
-            mario.velocity += RUN_SPEED_PPS
-        mario.timer = 100
-
-    def exit(mario, event):
-        if event == A_DOWN:
-            mario.isJump = True
-        pass
-
-    def do(mario):
-        if mario.isJump == True:
-            pass #(점프내용 구현)
-        pass
-
-    def draw(mario):
-        if mario.dir == 1:
-            if mario.isJump == True:
-                mario.marioJR.draw(mario.x - mario.fixX, mario.y)
-            else:
-                mario.marioR.draw(mario.x - mario.fixX, mario.y)
-        else:
-            if mario.isJump == True:
-                mario.marioJL.draw(mario.x - mario.fixX, mario.y)
-            else:
-                mario.marioL.draw(mario.x - mario.fixX, mario.y)
 
 
 class DeadState:
@@ -308,6 +279,9 @@ class Mario: #
         self.isdeadM = False
         self.ma2 = False
         self.descendSpeed = JUMP_MIN_SPEED
+        self.isMM = False
+        self.htime = 0
+        self.ctime = 0
 
         self.isXstop = False
         self.xstop = 1
@@ -322,6 +296,8 @@ class Mario: #
         self.S_j = load_music('sound/small_jump.ogg')
         self.S_d = load_wav('sound/death.wav')
         self.S_f = load_music('sound/fireball.ogg')
+        self.S_i = load_music('sound/powerup.ogg')
+        self.S_i2 = load_music('sound/powerup_appears.ogg')
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -350,6 +326,10 @@ class Mario: #
 
         # self.y -= self.descSpeed * game_framework.frame_time
 
+        if self.isMM:
+            self.ctime = get_time()
+            if self.ctime - self.htime > 1:
+                self.isMM = False
 
         if self.isXstop:
             self.xstop = 0
@@ -366,11 +346,21 @@ class Mario: #
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
 
+    def getItem(self):
+        self.S_i.play()
+        self.life += 1
+        self.ma2 = True
+
     def loseLife(self):
         self.life -= 1
+        self.isMM = True
+        self.htime = get_time()
         if self.life == 0:
             self.add_event(DEAD)
             self.S_d.play()
+        if self.ma2 == True:
+            self.ma2 = False
+            self.S_i2.play()
 
     def fix(self, xx):
         self.fixX = xx

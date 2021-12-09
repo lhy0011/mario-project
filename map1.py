@@ -5,20 +5,8 @@ import map
 
 class Map1:
     ground = []
-
-    # for i in range(50):
-    #     ground.append(34 * i)
-    # for i in range(52,67): #2칸 띄고
-    #     ground.append(34 * i)
-    # for i in range(70, 120): #3칸 띄고
-    #     ground.append(34 * i)
-    # for i in range(122, 162): #2칸 띄고
-    #     ground.append(34 * i)
-    for i in range(150):
+    for i in range(170):
         ground.append(34 * i)
-
-    pipe = []
-
 
     block = []
     for i in range(340,510,68):
@@ -51,15 +39,34 @@ class Map1:
     block2_1.append(34 * 98)
     block2_1.append(34 * 98)
     block2_1.append(34 * 99)
-    block2_2 = [85, 85, 85 + 34, 85, 85 + 34, 85 + 34 *2, 85, 85 + 34, 85 + 34*2,85 + 34*3,   85, 85 + 34, 85 + 34*2,85 + 34*3,85,85 + 34,85 + 34*2,85,85 + 34,85]
+
+    block2_1.append(34 * 140)
+    block2_1.append(34 * 141)
+    block2_1.append(34 * 141)
+    block2_1.append(34 * 142)
+    block2_1.append(34 * 142)
+    block2_1.append(34 * 142)
+    block2_1.append(34 * 143)
+    block2_1.append(34 * 143)
+    block2_1.append(34 * 143)
+    block2_1.append(34 * 143)
+    block2_1.append(34 * 144)
+    block2_1.append(34 * 144)
+    block2_1.append(34 * 144)
+    block2_1.append(34 * 144)
+    block2_1.append(34 * 144)
+    block2_1.append(34 * 145)
+    block2_1.append(34 * 145)
+    block2_1.append(34 * 145)
+    block2_1.append(34 * 145)
+    block2_1.append(34 * 145)
+    block2_1.append(34 * 145)
+    block2_2 = [85, 85, 85 + 34, 85, 85 + 34, 85 + 34 *2, 85, 85 + 34, 85 + 34*2,85 + 34*3,
+                85, 85 + 34, 85 + 34*2,85 + 34*3,85,85 + 34,85 + 34*2,85,85 + 34,85,
+                85,   85 + 34, 85,   85 + 34, 85 + 34*2,   85, 85 + 34, 85 + 34*2, 85 + 34*3,   85, 85 + 34, 85 + 34*2, 85 + 34*3, 85+34*4,
+                85, 85 + 34, 85 + 34*2, 85 + 34*3, 85+34*4, 85+34*5,   85, 85 + 34, 85 + 34*2, 85 + 34*3, 85+34*4, 85+34*5, 85+34*6]
 
     pipe1 = []
-    # for i in range(2):
-    #     pipe1.append((950, 102 + 34*i))
-    # for i in range(3):
-    #     pipe1.append((1050, 102 + 34*i))
-    # for i in range(2):
-    #     pipe1.append((1150, 102 + 34*i))
     pipe1.append(900)
     pipe1.append(1500)
     pipe1.append(2100)
@@ -74,6 +81,13 @@ class Map1:
     randomboxC.append(238)
     randomboxC.append(34 * 69)
     randomboxC.append(34 * 75)
+    randomboxC.append(34 * 113)
+    randomboxC.append(34 * 114)
+    randomboxC.append(34 * 115)
+
+    randomboxC2 = []
+    randomboxC2.append(34*72)
+
 
     randomboxI = []
     randomboxI.append(442)
@@ -85,8 +99,8 @@ class Map1:
 
 
     ## 몬스터
-    goomba = [100, 750, 2500, 2600]
-    m = [400]
+    goomba = [100, 750, 1050, 1350, 2500, 2600, 34*115, 34*117, 34*119]
+    m = [34*125]
 
     def update(self):
         pass

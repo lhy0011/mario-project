@@ -185,6 +185,61 @@ class Pipe2:
         return self.x - 34 - self.fixX, self.y - 68, self.x + 34 - self.fixX, self.y + 68
 
 
+class RandBoxC2:
+    image = None
+    imageC = None
+    def __init__(self, x):
+        RandBoxC2.image = load_image('resource/tile_set.png')
+        RandBoxC2.imageC = load_image('resource/coin.png')
+        self.x = x
+        self.y = 204 + 34*3
+        self.cy = 204
+        self.fixX = 0
+        self.frame = 0
+        self.isBreak = False
+        self.isSound = False
+        self.count = 12
+        self.hitC = 7
+        self.S_b = load_music('sound/coin.ogg')
+
+    def draw(self):
+        if self.hitC > 0:
+            RandBoxC2.image.clip_draw(800 + SIZES * int(self.frame)-1, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
+            draw_rectangle(*self.get_bb())
+            if self.isBreak:
+                if (self.count <= 12 and self.count > 8) or (self.count <= 4 and self.count > 0):
+                    RandBoxC2.imageC.clip_draw(16, 0, 16, 16, self.x - self.fixX, self.y + 34, 34, 34)
+                    self.count -= 1
+                elif self.count <= 8 and self.count > 4:
+                    RandBoxC2.imageC.clip_draw(16, 0, 16, 16, self.x - self.fixX, self.y + 34 + 5, 34, 34)
+                    self.count -= 1
+                self.isBreak = False
+        else:
+            RandBoxC2.image.clip_draw(900, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
+            draw_rectangle(*self.get_bb())
+            if (self.count <= 12 and self.count > 8) or (self.count <= 4 and self.count > 0):
+                RandBoxC2.imageC.clip_draw(16, 0, 16, 16, self.x - self.fixX, self.y + 34, 34, 34)
+                self.count -= 1
+            elif self.count <= 8 and self.count > 4:
+                RandBoxC2.imageC.clip_draw(16, 0, 16, 16, self.x - self.fixX, self.y + 34 + 5, 34, 34)
+                self.count -= 1
+
+        pass
+
+    def update(self):
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+
+        if self.hitC > 0:
+            if self.count < 0:
+                self.count = 12
+        pass
+
+    def fix(self, xx):
+        self.fixX = xx
+
+    def get_bb(self):
+        return self.x - 20 - self.fixX, self.y - 17, self.x + 20 - self.fixX, self.y + 17
+
 class RandBoxC:
     image = None
     imageC = None
@@ -227,7 +282,7 @@ class RandBoxC:
         self.fixX = xx
 
     def get_bb(self):
-        return self.x - 20 - self.fixX, self.y - 17, self.x + 20 - self.fixX, self.y + 17
+        return self.x - 18 - self.fixX, self.y - 17, self.x + 18 - self.fixX, self.y + 17
 
 class RandBoxI:
     image = None
@@ -390,9 +445,9 @@ class Cloud: # 그 외 배경
     def fix(self, xx):
         self.fixX = xx
 
-class Tree:
+class Grass:
     def __init__(self):
-        self.tree = load_image('resource/tile_set.png')
+        self.tree = load_image('resource/grass.png')
         self.x = 0
         self.y = 0
         self.fixX = 0

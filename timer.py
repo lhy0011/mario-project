@@ -2,9 +2,9 @@ from pico2d import *
 
 
 class Timer:
-    def __init__(self):
+    def __init__(self, t):
         self.font = load_font('ENCR10B.TTF', 32)
-        self.time = 300
+        self.time = t
         self.isStop = False
         pass
 

@@ -12,7 +12,7 @@ import sound
 from timer import Timer
 from mario import Mario, IdleState
 from monster import M, Mgoomba
-from map import BG, Block, Grounds, Coin, Cloud, Item2, RandBoxC, RandBoxI, Pipe1, Pipe2, Block2
+from map import BG, Block, Grounds, Coin, Cloud, Item2, RandBoxC, RandBoxI, Pipe1, Pipe2, Block2, RandBoxC2
 from score import Score
 
 name = "MainState"
@@ -32,6 +32,7 @@ pipes1 = []
 pipes2 = []
 
 rboxsC = []
+rboxsC2 = []
 rboxsI = []
 
 coins = []
@@ -43,7 +44,7 @@ timer = None
 player = None
 
 #몬스터
-m = None
+mm = None
 goombas = []
 
 
@@ -121,16 +122,16 @@ def enter():
     # item2 = Item2()
     # game_world.add_object(item2, 2)
 
-    global m
-    m = M()
-    game_world.add_object(m, 3)
+    global mm
+    mm = M(map1.Map1.m[0])
+    game_world.add_object(mm, 3)
 
     global goombas
     goombas = [Mgoomba(map1.Map1.goomba[i]) for i in range(len(map1.Map1.goomba))]
     game_world.add_objects(goombas, 3)
 
     global timer
-    timer = Timer()
+    timer = Timer(300 + get_time())
     game_world.add_object(timer, 1)
 
     global score
@@ -158,8 +159,12 @@ def enter():
     game_world.add_objects(pipes2, 2)
 
     global rboxsC
-    rboxsC = [RandBoxC(map1.Map1.randomboxC[i]) for i in range (len(map1.Map1.randomboxC))]
+    rboxsC = [RandBoxC(map1.Map1.randomboxC[i]) for i in range(len(map1.Map1.randomboxC))]
     game_world.add_objects(rboxsC, 2)
+
+    global rboxsC2
+    rboxsC2 = [RandBoxC2(map1.Map1.randomboxC2[i]) for i in range(len(map1.Map1.randomboxC2))]
+    game_world.add_objects(rboxsC2, 2)
 
     global rboxsI
     rboxsI = [RandBoxI(map1.Map1.randomboxI[i]) for i in range (len(map1.Map1.randomboxI))]
@@ -218,9 +223,25 @@ def update():
                 player.y -= 20
                 player.isJump = False
                 player.isDescend = True
+                if rc.isBreak == False:
+                    score.sco += 100
+                    score.coin += 1
                 rc.isBreak = True
-                score.sco += 100
-                score.coin += 1
+    for rc in rboxsC2:
+        if collide(player, rc):
+            if player.y >= rc.y:
+                player.y = rc.y + 35
+                player.curY = player.y
+            elif player.y <= rc.y + 5:
+                player.y -= 20
+                player.isJump = False
+                player.isDescend = True
+                rc.isBreak = True
+                rc.hitC -= 1
+                if rc.hitC > 0:
+                    rc.S_b.play()
+                    score.sco += 100
+                    score.coin += 1
     for r in rboxsI:
         if collide(player, r):
             if player.y >= r.y:
@@ -268,7 +289,7 @@ def update():
 
     for i in game_world.all_objects2(4):
         if collide(player, i):
-            player.ma2 = True
+            player.getItem()
             score.sco += 500
             i.remove()
             game_world.remove_object(i)
@@ -288,13 +309,15 @@ def update():
             if player.y-17 >= goomba.y+17:
                 player.y += 15
                 score.sco += 200
+                goomba.S_d.play()
                 goomba.isDead = True
                 goombas.remove(goomba)
                 game_world.remove_object(goomba)
                 goomba.remove()
             else:
-                player.loseLife()
-                timer.stop()
+                if player.isMM == False:
+                    player.loseLife()
+
 
 
             # if isKill == True:
@@ -307,11 +330,11 @@ def update():
             #     timer.stop()
 
 
-    if Mcollide(player, m):
+    if Mcollide(player, mm):
         if isKill == True:
             score.sco += 200
-            m.remove()
-            game_world.remove_object(m)
+            mm.remove()
+            game_world.remove_object(mm)
             # isKill = False
         elif isDead == True:
             player.loseLife()
