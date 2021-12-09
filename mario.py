@@ -265,7 +265,7 @@ class Mario: #
         self.speedX = 0.0
         self.speedY = 5
         self.x = 150
-        self.y = 2000
+        self.y = 2500
         self.font = load_font('ENCR10B.TTF', 16)
         self.curY = 0
 
@@ -339,7 +339,7 @@ class Mario: #
 
     def draw(self):
         self.cur_state.draw(self)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:

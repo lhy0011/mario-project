@@ -5,7 +5,7 @@ import map
 
 class Map1:
     ground = []
-    for i in range(170):
+    for i in range(175):
         ground.append(34 * i)
 
     block = []
@@ -96,6 +96,9 @@ class Map1:
     coin = []
     for i in range(340, 544, 68):
         coin.append(i)
+    coin.append(34*115)
+    coin.append(34 * 117)
+    coin.append(34 * 119)
 
 
     ## 몬스터

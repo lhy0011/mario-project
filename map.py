@@ -106,7 +106,7 @@ class Block:
 
     def draw(self):
         Block.image.clip_draw(SIZES, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         pass
 
     def update(self):
@@ -128,7 +128,7 @@ class Block2:
 
     def draw(self):
         Block2.image.clip_draw(0, MAXHEIGHT - SIZES * 2, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         pass
 
     def update(self):
@@ -150,7 +150,7 @@ class Pipe1:
 
     def draw(self):
         Pipe1.image.draw(self.x - self.fixX, self.y, 68, 68)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         pass
 
     def update(self):
@@ -172,7 +172,7 @@ class Pipe2:
 
     def draw(self):
         Pipe1.image.draw(self.x - self.fixX, self.y, 68, 136)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         pass
 
     def update(self):
@@ -205,7 +205,7 @@ class RandBoxC2:
     def draw(self):
         if self.hitC > 0:
             RandBoxC2.image.clip_draw(800 + SIZES * int(self.frame)-1, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
-            draw_rectangle(*self.get_bb())
+            # draw_rectangle(*self.get_bb())
             if self.isBreak:
                 if (self.count <= 12 and self.count > 8) or (self.count <= 4 and self.count > 0):
                     RandBoxC2.imageC.clip_draw(16, 0, 16, 16, self.x - self.fixX, self.y + 34, 34, 34)
@@ -216,7 +216,7 @@ class RandBoxC2:
                 self.isBreak = False
         else:
             RandBoxC2.image.clip_draw(900, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
-            draw_rectangle(*self.get_bb())
+            # draw_rectangle(*self.get_bb())
             if (self.count <= 12 and self.count > 8) or (self.count <= 4 and self.count > 0):
                 RandBoxC2.imageC.clip_draw(16, 0, 16, 16, self.x - self.fixX, self.y + 34, 34, 34)
                 self.count -= 1
@@ -259,10 +259,10 @@ class RandBoxC:
     def draw(self):
         if self.isBreak == False:
             RandBoxC.image.clip_draw(800 + SIZES * int(self.frame)-1, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
-            draw_rectangle(*self.get_bb())
+            # draw_rectangle(*self.get_bb())
         else:
             RandBoxC.image.clip_draw(900, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
-            draw_rectangle(*self.get_bb())
+            # draw_rectangle(*self.get_bb())
             if (self.count <= 12 and self.count > 8) or (self.count <= 4 and self.count > 0):
                 RandBoxC.imageC.clip_draw(16, 0, 16, 16, self.x - self.fixX, self.y + 34, 34, 34)
                 self.count -= 1
@@ -300,10 +300,10 @@ class RandBoxI:
     def draw(self):
         if self.isBreak == False:
             Block.image.clip_draw(800 + SIZES * int(self.frame)-1, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
-            draw_rectangle(*self.get_bb())
+            # draw_rectangle(*self.get_bb())
         else:
             Block.image.clip_draw(900, MAXHEIGHT - SIZES, SIZES, SIZES, self.x - self.fixX, self.y, 34, 34)
-            draw_rectangle(*self.get_bb())
+            # draw_rectangle(*self.get_bb())
         pass
 
     def update(self):
@@ -325,6 +325,28 @@ class RandBoxI:
     def get_bb(self):
         return self.x - 19 - self.fixX, self.y - 17, self.x + 19 - self.fixX, self.y + 17
 
+class Goal:
+    image = None
+    def __init__(self):
+        Goal.image = load_image('resource/goal.png')
+        self.x = 34 * 155
+        self.y = 238
+        self.fixX = 0
+
+    def draw(self):
+        Goal.image.draw(self.x - self.fixX, self.y)
+        # draw_rectangle(*self.get_bb())
+        pass
+
+    def update(self):
+        pass
+
+    def fix(self, xx):
+        self.fixX = xx
+
+    def get_bb(self):
+        return self.x - 10 - self.fixX, self.y - 170, self.x + 10 - self.fixX, self.y + 165
+
 ###### 아이템  16x16
 
 class Coin:
@@ -341,7 +363,7 @@ class Coin:
         for i in range(len(map1.Map1.coin)):
             Coin.image.clip_draw(int(self.frame) * 16, 0, 16, 16, self.x - self.fixX, self.y, 34, 34)
             # Coin.image.clip_draw(int(self.frame) * 16, 0, 16, 16, map1.Map1.coin[i] - self.fixX, self.y, 34, 34)
-            draw_rectangle(*self.get_bb())
+            # draw_rectangle(*self.get_bb())
         pass
 
     def update(self):
@@ -359,28 +381,28 @@ class Coin:
         self.x, self.y = -500, -500
 
 
-class Item1:
-    image = None
-
-    def __init__(self):
-        Item1.image = load_image('resource/item1.png')
-        self.frame = 0
-        self.x, self.y = 0, 0
-        self.fixX = 0
-
-    def draw(self):
-        Item1.image.clip_draw(int(self.frame) * 16, 0, 16, 16, self.x - self.fixX, self.y)
-        pass
-
-    def update(self):
-        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
-        pass
-
-    def fix(self, xx):
-        self.fixX = xx
-
-    def get_bb(self):
-        return self.x - 17 - self.fixX, self.y - 17, self.x + 17 - self.fixX, self.y + 17
+# class Item1:
+#     image = None
+#
+#     def __init__(self):
+#         Item1.image = load_image('resource/item1.png')
+#         self.frame = 0
+#         self.x, self.y = 0, 0
+#         self.fixX = 0
+#
+#     def draw(self):
+#         Item1.image.clip_draw(int(self.frame) * 16, 0, 16, 16, self.x - self.fixX, self.y)
+#         pass
+#
+#     def update(self):
+#         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+#         pass
+#
+#     def fix(self, xx):
+#         self.fixX = xx
+#
+#     def get_bb(self):
+#         return self.x - 17 - self.fixX, self.y - 17, self.x + 17 - self.fixX, self.y + 17
 
 
 class Item2:
@@ -395,7 +417,7 @@ class Item2:
 
     def draw(self):
         Item2.image.clip_draw(int(self.frame) * 16, 0, 16, 16, self.x - self.fixX, self.y, 34, 34)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         pass
 
     def update(self):
@@ -446,12 +468,15 @@ class Cloud: # 그 외 배경
         self.fixX = xx
 
 class Grass:
+    image = None
     def __init__(self):
-        self.tree = load_image('resource/grass.png')
+        Grass.image = load_image('resource/grass.png')
         self.x = 0
         self.y = 0
         self.fixX = 0
     def draw(self):
+        for i in range(10):
+            Grass.image.draw(800 * i - self.fixX, 85)
         pass
     def update(self):
         pass

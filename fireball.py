@@ -32,9 +32,9 @@ class fireBall:
         return self.x - 5, self.y - 5, self.x + 5, self.y + 5
 
     def draw(self):
-        self.image.draw(self.x, self.y)
+        self.image.draw(self.x, self.y, 12, 12)
         # fill here for draw
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
 
     def update(self):
         self.x += self.speed * game_framework.frame_time * self.dir

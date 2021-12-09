@@ -12,7 +12,7 @@ import sound
 from timer import Timer
 from mario import Mario, IdleState
 from monster import M, Mgoomba
-from map import BG, Block, Grounds, Coin, Cloud, Item2, RandBoxC, RandBoxI, Pipe1, Pipe2, Block2, RandBoxC2
+from map import BG, Block, Grounds, Coin, Cloud, Grass, RandBoxC, RandBoxI, Pipe1, Pipe2, Block2, RandBoxC2, Goal
 from score import Score
 
 name = "MainState"
@@ -25,6 +25,7 @@ bg = None
 ground = None
 grounds = []
 cloud = None
+grass = None
 blocks = []
 blocks2 = []
 
@@ -42,6 +43,8 @@ score = None
 timer = None
 
 player = None
+
+goal = None
 
 #몬스터
 mm = None
@@ -114,6 +117,10 @@ def enter():
     cloud = Cloud()
     game_world.add_object(cloud, 1)
 
+    global grass
+    grass = Grass()
+    game_world.add_object(grass, 1)
+
     global coins
     coins = [Coin(map1.Map1.coin[i]) for i in range(3)]
     game_world.add_objects(coins, 2)
@@ -169,6 +176,10 @@ def enter():
     global rboxsI
     rboxsI = [RandBoxI(map1.Map1.randomboxI[i]) for i in range (len(map1.Map1.randomboxI))]
     game_world.add_objects(rboxsI, 2)
+
+    global goal
+    goal = Goal()
+    game_world.add_object(goal, 3)
 
 
 
@@ -318,16 +329,15 @@ def update():
                 if player.isMM == False:
                     player.loseLife()
 
-
-
-            # if isKill == True:
-            #     score.sco += 200
-            #     goombas.remove(goomba)
-            #     game_world.remove_object(goomba)
-            #     isKill = False
-            # elif isDead == True:
-            #     player.loseLife()
-            #     timer.stop()
+    if collide(player, mm):
+        if player.y - 17 >= goomba.y + 17:
+            player.y += 15
+            score.sco += 400
+            mm.remove()
+            game_world.remove_object(goomba)
+        else:
+            if player.isMM == False:
+                player.loseLife()
 
 
     if Mcollide(player, mm):
