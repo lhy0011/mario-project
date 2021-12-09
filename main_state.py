@@ -123,8 +123,8 @@ def enter():
     game_world.add_object(grass, 1)
 
     global coins
-    coins = [Coin(map1.Map1.coin[i]) for i in range(3)]
-    game_world.add_objects(coins, 2)
+    coins = [Coin(map1.Map1.coin[i]) for i in range(len(map1.Map1.coin))]
+    game_world.add_objects(coins, 3)
 
     # global item2
     # item2 = Item2()

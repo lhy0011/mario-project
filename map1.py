@@ -96,9 +96,13 @@ class Map1:
     coin = []
     for i in range(340, 544, 68):
         coin.append(i)
-    coin.append(34*115)
+    coin.append(34 * 107)
+    coin.append(34 * 109)
+    coin.append(34 * 111)
+
     coin.append(34 * 117)
     coin.append(34 * 119)
+    coin.append(34 * 121)
 
 
     ## 몬스터
