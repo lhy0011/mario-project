@@ -6,6 +6,7 @@ class Timer:
         self.font = load_font('ENCR10B.TTF', 32)
         self.time = t
         self.isStop = False
+        self.leftT = 0
         pass
 
     def update(self):
@@ -20,6 +21,7 @@ class Timer:
 
     def stop(self):
         self.isStop = True
+        self.leftT = int(self.time - get_time())
 
     def fix(self, xx):
         pass

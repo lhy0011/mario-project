@@ -285,6 +285,7 @@ class Mario: #
 
         self.isXstop = False
         self.xstop = 1
+        self.isGoal = False
 
         self.life = 1
 
@@ -298,6 +299,7 @@ class Mario: #
         self.S_f = load_music('sound/fireball.ogg')
         self.S_i = load_music('sound/powerup.ogg')
         self.S_i2 = load_music('sound/powerup_appears.ogg')
+        self.S_g = load_wav('bgm/stage_clear.wav')
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -336,9 +338,14 @@ class Mario: #
         else:
             self.xstop = 1
 
+    def goalY(self):
+        self.y -= 1
+
 
     def draw(self):
         self.cur_state.draw(self)
+        if self.isGoal:
+            self.S_g.play()
         # draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):

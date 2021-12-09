@@ -55,7 +55,7 @@ class Mgoomba: # 32x32
         global EMAXWIDTH
         global ESIZE
         Mgoomba.image.clip_draw(int(self.frame) * 33, EMAXHEIGHT - ESIZE*2, 33, 32, self.x - self.fixX, self.y)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
 
     def fix(self, xx):
         self.fixX = xx
@@ -108,7 +108,7 @@ class M:
         global EMAXWIDTH
         global ESIZE
         M.image.clip_draw(int(self.frame) * 33 + (33 * 3), EMAXHEIGHT - ESIZE*2, 33, 32, self.x - self.fixX, self.y)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
 
     def fix(self, xx):
         self.fixX = xx

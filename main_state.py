@@ -6,6 +6,7 @@ from pico2d import *
 import game_framework
 import game_world
 import gameover_state
+import end_state
 import map1
 
 import sound
@@ -138,16 +139,13 @@ def enter():
     game_world.add_objects(goombas, 3)
 
     global timer
-    timer = Timer(300 + get_time())
+    # timer = Timer(300 + get_time())
+    timer = Timer(300)
     game_world.add_object(timer, 1)
 
     global score
     score = Score()
     game_world.add_object(score, 1)
-
-    global player
-    player = Mario()
-    game_world.add_object(player, 3)
 
     global blocks
     blocks = [Block(map1.Map1.block[i]) for i in range(len(map1.Map1.block))]
@@ -180,6 +178,10 @@ def enter():
     global goal
     goal = Goal()
     game_world.add_object(goal, 3)
+
+    global player
+    player = Mario()
+    game_world.add_object(player, 3)
 
 
 
@@ -339,24 +341,20 @@ def update():
             if player.isMM == False:
                 player.loseLife()
 
+    if collide(player, goal):
+        player.isXstop = True
+        player.isGoal = True
+        timer.stop()
+        while player.y > 83:
+            player.goalY()
+        delay(3)
+        game_framework.change_state(end_state)
 
-    if Mcollide(player, mm):
-        if isKill == True:
-            score.sco += 200
-            mm.remove()
-            game_world.remove_object(mm)
-            # isKill = False
-        elif isDead == True:
-            player.loseLife()
-            timer.stop()
-            pass
 
     if player.isdeadM:
         delay(2)
         game_framework.change_state(gameover_state)
 
-    # if Mcollide(player.Mario.fireball.ball, goomba):
-    #     game_world.remove_object(goomba)
 
 
 

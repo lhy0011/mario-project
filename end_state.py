@@ -1,12 +1,13 @@
 import game_framework
 from pico2d import *
+import score
 
 image = None
 font = None
 
 def enter():
     global image, font
-    font = load_font('ENCR10B.TTF', 40)
+    font = load_font('ENCR10B.TTF', 50)
     image = load_image('resource/game_over.png')
 
 
@@ -30,7 +31,12 @@ def handle_events():
 
 def draw():
     clear_canvas()
-    image.draw(500, 300, 1000, 600)
+    image.clip_draw(50, 50, 50, 50, 500, 500, 1000, 1000)
+    font.draw(250, 400, 'GAME CLEAR!', (255, 255, 255))
+    font.draw(620, 260, 'SCORE', (255, 255, 255))
+    font.draw(620, 210, '%d' % main_state.score.sco, (255, 255, 255))
+    font.draw(180, 260, 'LEFT TIME', (255, 255, 255))
+    font.draw(180, 210, '%d' % main_state.timer.leftT, (255, 255, 255))
 
     update_canvas()
 
